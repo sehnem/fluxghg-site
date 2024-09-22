@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 "contact": "Contact"
             },
             "hero": {
-                "title": "Expertise in Carbon Balance Monitoring for Brazilian Agriculture",
-                "subtitle": "Unlock the potential of your farm with fluxGHG's cutting-edge greenhouse gas monitoring solutions.",
+                "title": "Expertise in Carbon Balance and Water Monitoring for Brazilian Agriculture",
+                "subtitle": "Unlock the potential of your farm with fluxGHG's cutting-edge greenhouse gas and water monitoring solutions. Optimize your resource management for sustainable growth.",
                 "cta": "Get Started"
             },
             "eddy_covariance": {
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "copyright": "© 2024 fluxGHG. All rights reserved."
             }
         },
-        pt: {
+        pt_br: {
             "nav": {
                 "home": "Início",
                 "about": "Sobre Nós",
@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 "contact": "Contato"
             },
             "hero": {
-                "title": "Expertise no Monitoramento do Balanço de Carbono na Agricultura Brasileira",
-                "subtitle": "Libere o potencial da sua fazenda com as soluções de ponta da fluxGHG para monitoramento de gases de efeito estufa.",
+                "title": "Expertise em Balanço de Carbono e Monitoramento Hídrico para a Agricultura Brasileira",
+                "subtitle": "Desbloqueie o potencial da sua fazenda com as soluções de ponta da fluxGHG para monitoramento de gases de efeito estufa e água. Otimize a gestão de seus recursos para um crescimento sustentável.",
                 "cta": "Comece Agora"
             },
             "eddy_covariance": {
@@ -345,8 +345,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else if (element.tagName === 'LABEL') {
                 element.textContent = value;
+            } else if (element.tagName === 'A' && element.classList.contains('cta-button')) {
+                element.innerHTML = `${value} <span class="material-icons">arrow_forward</span>`;
             } else {
-                element.innerHTML = value;
+                element.textContent = value;
             }
         });
     }
@@ -377,9 +379,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Call this function when the DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        changeLanguage('en'); // Set default language
-        setupFormInputs(); // Setup form input behaviors
-    });
+    // Function to get user's preferred language
+    function getPreferredLanguage() {
+        const languages = navigator.languages || [navigator.language || navigator.userLanguage];
+        
+        for (let lang of languages) {
+            lang = lang.substr(0, 2).toLowerCase();
+            if (lang === 'pt') {
+                return 'pt_br';
+            }
+            if (lang === 'en') {
+                return 'en';
+            }
+        }
+        
+        return 'en'; // Default to English if no match
+    }
+
+    // Function to set language based on user preference
+    function setLanguageByPreference() {
+        const lang = getPreferredLanguage();
+        changeLanguage(lang);
+    }
+
+    // Replace setLanguageByLocation with setLanguageByPreference
+    setLanguageByPreference();
+    setupFormInputs();
 });
