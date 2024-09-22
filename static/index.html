@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fluxGHG - Monitoring Greenhouse Gases</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="assets/logo/horizontal_darkblue.svg" alt="fluxGHG Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#home" data-i18n="nav.home">Home</a></li>
+                    <li><a href="#about-us" data-i18n="nav.about">About Us</a></li>
+                    <li><a href="#services" data-i18n="nav.services">Services</a></li>
+                    <li><a href="#team" data-i18n="nav.team">Team</a></li>
+                    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+                    <li class="language-selector">
+                        <select id="language-select">
+                            <option value="en">en</option>
+                            <option value="pt">pt-BR</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 data-i18n="hero.title">Expertise in Carbon Balance Monitoring for Brazilian Agriculture</h1>
+                <p data-i18n="hero.subtitle">Unlock the potential of your farm with fluxGHG's cutting-edge greenhouse gas monitoring solutions.</p>
+                <a href="#contact" class="cta-button" data-i18n="hero.cta">Get Started <span class="material-icons">arrow_forward</span></a>
+            </div>
+        </section>
+
+        <section id="eddy-covariance" class="eddy-covariance">
+            <div class="container">
+                <div class="content-wrapper">
+                    <div class="image-content">
+                        <img src="assets/images/eddy-covariance.jpg" alt="Eddy Covariance Tower" class="parallax-image">
+                    </div>
+                    <div class="text-content">
+                        <h2 data-i18n="eddy_covariance.title">Eddy Covariance: The Gold Standard in Carbon Flux Measurement</h2>
+                        <p data-i18n="eddy_covariance.paragraph1">Eddy covariance is a highly accurate atmospheric measurement technique that quantifies the vertical turbulent fluxes of heat, water vapor, and greenhouse gases like carbon dioxide and methane. This powerful method allows fluxGHG to precisely measure the exchanges of these gases between the atmosphere and your agricultural ecosystem.</p>
+                        <p data-i18n="eddy_covariance.paragraph2">By deploying state-of-the-art flux towers equipped with eddy covariance technology, we can rapidly assess whether your farm is a net carbon sink or source. Our expert team will work with you to interpret the data and develop strategies to optimize your carbon balance and enhance the sustainability of your operations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="co2-modeling" class="co2-modeling">
+            <div class="container">
+                <div class="content-wrapper">
+                    <div class="text-content">
+                        <h2 data-i18n="co2_modeling.title">Advanced CO2 Modeling: Extrapolating Carbon Dynamics Across Regions</h2>
+                        <p data-i18n="co2_modeling.paragraph1">At fluxGHG, we go beyond simple measurements. Our team of experienced data scientists and agronomists leverage the wealth of data collected by our flux towers to develop sophisticated CO2 models. These models allow us to simulate and predict carbon dynamics not just for your farm, but for entire regions.</p>
+                        <p data-i18n="co2_modeling.paragraph2">By integrating data on soil organic matter, plant biomass, gas chambers, and remote sensing, we can extrapolate our findings to provide a comprehensive understanding of the carbon balance across various agricultural systems. This knowledge empowers you to make informed decisions about land management, crop selection, and carbon sequestration strategies, ultimately contributing to a more sustainable and climate-resilient agricultural sector in Brazil.</p>
+                    </div>
+                    <div class="image-content">
+                        <img src="assets/images/co2-modeling.jpg" alt="CO2 Modeling Visualization">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about-us" class="about-us">
+            <div class="container">
+                <h2 data-i18n="about.title">About Us</h2>
+                <div class="about-grid">
+                    <div class="about-item">
+                        <div class="about-content">
+                            <h3 data-i18n="about.expertise.title">Expertise</h3>
+                            <p data-i18n="about.expertise.description">Our team consists of highly qualified professionals from the Federal University of Santa Maria (UFSM), with extensive experience in greenhouse gas monitoring, micrometeorology, agronomy, and soil science.</p>
+                        </div>
+                    </div>
+                    <div class="about-item">
+                        <div class="about-content">
+                            <h3 data-i18n="about.vision.title">Vision</h3>
+                            <p data-i18n="about.vision.description">We aim to become a leader in the greenhouse gas monitoring market, helping companies make more conscious and sustainable decisions through our innovative solutions.</p>
+                        </div>
+                    </div>
+                    <div class="about-item">
+                        <div class="about-content">
+                            <h3 data-i18n="about.technology.title">Technology</h3>
+                            <p data-i18n="about.technology.description">We utilize the eddy covariance technique to accurately quantify gas absorption and emissions quickly. Additionally, we use advanced AI models to extrapolate data, providing insights that enhance your understanding of carbon dynamics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="services" class="services">
+            <div class="container">
+                <h2 data-i18n="services.title">Our Services</h2>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <span class="material-icons">sensors</span>
+                        <h3 data-i18n="services.installation.title">Installation of Measurement Systems for Greenhouse Gas Quantification</h3>
+                        <p data-i18n="services.installation.description">We install state-of-the-art flux towers in agricultural areas, providing the fastest and most precise monitoring method available. These towers measure carbon absorption and emission, offering invaluable data that can be utilized for carbon credit projects and enhancing the value of your products. Our approach ensures you get rapid insights to support sustainable farming decisions.</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="material-icons">calculate</span>
+                        <h3 data-i18n="services.determination.title">Determination of Emission and Absorption Factors for Agricultural Areas</h3>
+                        <p data-i18n="services.determination.description">Many carbon projects rely on emission and absorption factors derived from US and European data, which often do not reflect the unique conditions of Brazilian agriculture. We specialize in calculating real, location-specific emission and absorption factors for your monitored systems, providing you with accurate, relevant, and trustworthy data tailored to your needs. This ensures your carbon assessments are as precise and applicable as possible.</p>
+                    </div>
+                    <div class="service-item">
+                        <span class="material-icons">satellite_alt</span>
+                        <h3 data-i18n="services.extrapolation.title">Extrapolation through Modeling and Remote Sensing</h3>
+                        <p data-i18n="services.extrapolation.description">Our team employs advanced satellite imagery and sophisticated software to extrapolate data gathered from flux tower measurements, extending the insights to broader areas of your property or region. This approach allows us to deliver comprehensive assessments that cover larger landscapes, offering a detailed understanding of carbon dynamics on a bigger scale, empowering you to make data-driven decisions for your entire operation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Team section -->
+        <section id="team" class="team">
+            <div class="container">
+                <h2 data-i18n="team.title">Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="assets/images/alecsander.jpg" alt="Alecsander">
+                        <h3 data-i18n="team.alecsander.name">Alecsander Mergen</h3>
+                        <p class="role" data-i18n="team.alecsander.role">Co-founder & CEO</p>
+                        <div class="divider"></div>
+                        <p class="description" data-i18n="team.alecsander.description">Ph.D. candidate in Physics with vast experience in the installation and configuration of Eddy Covariance systems. Alecsander is a leader in environmental monitoring technologies, bringing a deep understanding of the complex dynamics involved in gas flux measurements, making him a pivotal force behind our mission to advance sustainable agricultural practices.</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="assets/images/josue.webp" alt="Josue">
+                        <h3 data-i18n="team.josue.name">Josué M. Sehnem</h3>
+                        <p class="role" data-i18n="team.josue.role">Co-founder & CTO</p>
+                        <p class="description" data-i18n="team.josue.description">Electrical Engineer with extensive experience in data processing and analysis. Josué specializes in developing cutting-edge technological solutions that drive innovation in greenhouse gas monitoring and precision agriculture. His expertise ensures the highest standards of data accuracy and reliability.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 data-i18n="contact.title">Get in Touch</h2>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" required data-i18n="contact.name">
+                        <label for="name" data-i18n="contact.name">Your Name</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" required data-i18n="contact.email">
+                        <label for="email" data-i18n="contact.email">Your Email</label>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" required data-i18n="contact.message"></textarea>
+                        <label for="message" data-i18n="contact.message">Your Message</label>
+                    </div>
+                    <button type="submit" data-i18n="contact.send">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p data-i18n="footer.copyright">&copy; 2024 fluxGHG. All rights reserved.</p>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

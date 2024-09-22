@@ -1,0 +1,859 @@
+:root {
+    --primary: #1E80A6;
+    --primary-light: #239FBC;
+    --primary-dark: #185A8A;
+    --accent: #7EB56F;
+    --text: #212121;
+    --text-light: #FFFFFF;
+    --background: #F5F5F5;
+    --surface: #FFFFFF;
+    --error: #F44336;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+@font-face {
+    font-family: 'IBM Plex Serif';
+    src: url('assets/fonts/IBM_Plex_Serif/IBMPlexSerif-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IBM Plex Serif Italic';
+    src: url('assets/fonts/IBM_Plex_Serif/IBMPlexSerif-LightItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Work Sans';
+    src: url('assets/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Roboto', 'Work Sans', sans-serif;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'IBM Plex Serif', serif;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+/* Update these styles for the header and navigation */
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+    padding: 1rem 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: none; /* Remove the border */
+}
+
+header.scrolled {
+    background-color: var(--surface);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.logo {
+    height: 40px;
+    transition: filter 0.3s ease;
+    filter: brightness(0) invert(1); /* Make logo white */
+}
+
+header.scrolled .logo {
+    filter: none; /* Return to original color when header is scrolled */
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+nav ul li {
+    margin-left: 1.5rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-light); /* Change this to white */
+    font-weight: 600;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+nav ul li a:hover {
+    color: var(--accent);
+}
+
+header.scrolled nav ul li a {
+    color: var(--text); /* This will make the links black when scrolled */
+    text-shadow: none;
+}
+
+header.scrolled nav ul li a:hover {
+    color: var(--primary-dark);
+    background-color: rgba(24, 90, 138, 0.1);
+}
+
+main {
+    margin-top: 0; /* Remove top margin as hero section now accounts for header height */
+    overflow-x: hidden;
+}
+
+.hero {
+    height: 88vh; /* Full viewport height */
+    padding-top: 60px; /* Add padding to account for fixed header */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-image: url('assets/images/hero_image.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(24, 90, 138, 0.7);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--text-light);
+    max-width: 800px;
+    padding: 0 2rem;
+    backdrop-filter: blur(10px); /* Add a blur effect for a modern, glassy look */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Add a shadow */
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-out 0.3s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--accent);
+    color: var(--text-light);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    animation: fadeInUp 1s ease-out 0.6s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.cta-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+section {
+    padding: 6rem 0;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.service-item {
+    background-color: var(--surface);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Center all content in the service item */
+    min-width: 350px; /* Increase the minimum width for longer content */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.service-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.service-item p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.service-item .material-icons {
+    font-size: 6rem; /* Increase icon size */
+    color: var(--primary);
+    margin-bottom: 1.5rem; /* Add more space below the icon */
+    display: block; /* Ensure the icon takes full width */
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.feature-icon i {
+    font-size: 2rem;
+    color: var(--text-light);
+}
+
+.contact {
+    background-color: var(--surface);
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Update these styles for the contact form */
+.form-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-family: 'Roboto', sans-serif;
+    border: none;
+    border-bottom: 2px solid var(--primary-light);
+    background-color: transparent;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: var(--text);
+    background-color: var(--surface);
+    padding: 0 0.25rem;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus + label,
+textarea:not(:placeholder-shown) + label {
+    top: -0.5rem;
+    font-size: 0.8rem;
+    color: var(--primary);
+    background-color: var(--surface);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: transparent;
+}
+
+/* Add these new styles */
+input:focus::placeholder,
+textarea:focus::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+
+button {
+    background-color: var(--accent);
+    color: var(--text-light);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 30px;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+footer {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-align: center;
+    padding: 2rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        padding: 1rem 2rem;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: var(--text-light);
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: 1001;
+}
+
+.notification.success {
+    background-color: var(--accent);
+}
+
+.notification.error {
+    background-color: var(--error);
+}
+
+/* Team section styles */
+.team {
+    background-color: var(--surface);
+    padding: 8rem 0;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.team-member {
+    text-align: center;
+    background-color: var(--background);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.team-member::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(to right, var(--primary-light), var(--primary-dark));
+}
+
+.team-member img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    border: 4px solid var(--primary-light);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.team-member h3 {
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.team-member .role {
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.team-member .description {
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+}
+
+/* Add this new style for a divider */
+.team-member .divider {
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-light);
+    margin: 1rem auto;
+}
+
+/* Add these new styles */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.eddy-covariance, .co2-modeling {
+    padding: 8rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.eddy-covariance::before, .co2-modeling::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(24, 90, 138, 0.05), rgba(35, 159, 188, 0.05));
+    z-index: -1;
+}
+
+.eddy-covariance h2, .co2-modeling h2 {
+    color: var(--primary);
+    margin-bottom: 3rem;
+    text-align: center;
+    font-size: 2.5rem;
+    position: relative;
+}
+
+.eddy-covariance h2::after, .co2-modeling h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: var(--accent);
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.image-content {
+    flex: 1;
+    position: relative;
+}
+
+.image-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-content img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.parallax-image {
+    transition: transform 0.1s ease-out;
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .image-content {
+        order: -1;
+    }
+}
+
+/* Add these new styles for a more modern look */
+.eddy-covariance p, .co2-modeling p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.text-content {
+    position: relative;
+    z-index: 1;
+}
+
+.text-content::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--accent);
+}
+
+/* Add these new styles */
+
+.about-us {
+    background-color: var(--surface);
+    padding: 8rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-us::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(24, 90, 138, 0.05), rgba(35, 159, 188, 0.05));
+    z-index: -1;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.about-item {
+    background-color: var(--background);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.about-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.about-item .icon {
+    font-size: 20rem; /* Increased icon size from 15rem to 20rem */
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.about-item h3 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.about-item p {
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: var(--text);
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus + label,
+textarea:not(:placeholder-shown) + label {
+    top: -1.5rem;
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+button {
+    background-color: var(--accent);
+    color: var(--text-light);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 30px;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+footer {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+    text-align: center;
+    padding: 2rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        padding: 1rem 2rem;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: var(--text-light);
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: 1001;
+}
+
+.notification.success {
+    background-color: var(--accent);
+}
+
+.notification.error {
+    background-color: var(--error);
+}
+
+section h2 {
+    font-family: 'IBM Plex Serif Italic';
+    font-size: 3rem;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-light), var(--primary-dark));
+    border-radius: 2px;
+}
+
+
+.about-us h2 {
+    margin-bottom: 4rem; /* Adjust margin if needed */
+}
+
+/* Update styles for the services section */
+.services {
+    background-color: var(--background);
+    padding: 8rem 0;
+}
+
+.service-grid {
+    margin-top: 4rem;
+}
+
+/* Update styles for the team section */
+.team {
+    background-color: var(--surface);
+    padding: 8rem 0;
+}
+
+.team-grid {
+    margin-top: 4rem;
+}
+
+/* Add a subtle background pattern for better contrast */
+.services::before,
+.team::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(45deg, var(--primary-light) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--primary-light) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--primary-light) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--primary-light) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+/* Update styles for better contrast in these sections */
+.services,
+.team {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Language selector styles */
+.language-selector {
+    position: relative;
+    margin-left: 1.5rem;
+}
+
+#language-select {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    color: var(--text-light);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#language-select:focus {
+    outline: none;
+}
+
+.language-selector::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+header.scrolled #language-select,
+header.scrolled .language-selector::after {
+    color: var(--text);
+}
+
+#language-select option {
+    background-color: var(--surface);
+    color: var(--text);
+}

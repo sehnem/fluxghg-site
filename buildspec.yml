@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+  build:
+    commands:
+      - sam build
+      - sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides DomainName=new.fluxghg.com RootDomainName=fluxghg.com HostedZoneId=Z037154238ANF0R21VCMI
+
+artifacts:
+  type: zip
+  files:
+    - template.yaml
+    - packaged.yaml
