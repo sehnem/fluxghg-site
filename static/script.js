@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             "services": {
                 "title": "Our Services",
+                "intro": "Our specialized services help Brazilian agriculture optimize carbon balance and resource management through cutting-edge technology and expertise.",
                 "installation": {
                     "title": "Installation of Measurement Systems for Greenhouse Gas Quantification",
                     "description": "We install state-of-the-art flux towers in agricultural areas, providing the fastest and most precise monitoring method available. These towers measure carbon absorption and emission, offering invaluable data that can be utilized for carbon credit projects and enhancing the value of your products. Our approach ensures you get rapid insights to support sustainable farming decisions."
@@ -78,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 "send": "Send Message"
             },
             "footer": {
-                "copyright": "© 2024 fluxGHG. All rights reserved."
+                "copyright": "© 2024 fluxGHG. All rights reserved.",
+                "punchline": "Innovative solutions for monitoring and analyzing greenhouse gas emissions using eddy covariance and advanced modeling."
             }
         },
         pt_br: {
@@ -121,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             "services": {
                 "title": "Nossos Serviços",
+                "intro": "Nossos serviços especializados ajudam a agricultura brasileira a otimizar o balanço de carbono e o gerenciamento de recursos por meio de tecnologia de ponta e expertise.",
                 "installation": {
                     "title": "Instalação de Sistemas de Medição para Quantificação de Gases de Efeito Estufa",
                     "description": "Instalamos torres de fluxo de última geração em áreas agrícolas, fornecendo o método de monitoramento mais rápido e preciso disponível. Essas torres medem a absorção e emissão de carbono, oferecendo dados inestimáveis que podem ser utilizados para projetos de crédito de carbono e aumentando o valor de seus produtos. Nossa abordagem garante que você obtenha insights rápidos para apoiar decisões agrícolas sustentáveis."
@@ -155,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 "send": "Enviar Mensagem"
             },
             "footer": {
-                "copyright": "© 2024 fluxGHG. Todos os direitos reservados."
+                "copyright": "© 2024 fluxGHG. Todos os direitos reservados.",
+                "punchline": "Soluções inovadoras para monitoramento e análise de emissões de gases de efeito estufa usando eddy covariance e modelagem avançada."
             }
         }
     };
