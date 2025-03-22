@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // GSAP animations
     gsap.registerPlugin(ScrollTrigger);
-
+    const currentYear = new Date().getFullYear();
+    
     // Directly embed translations
     const translations = {
         en: {
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "send": "Send Message"
             },
             "footer": {
-                "copyright": "© 2024 fluxGHG. All rights reserved.",
+                "copyright": `© ${currentYear} fluxGHG. All rights reserved.`,
                 "punchline": "Innovative solutions for monitoring and analyzing greenhouse gas emissions using eddy covariance and advanced modeling."
             }
         },
@@ -158,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "send": "Enviar Mensagem"
             },
             "footer": {
-                "copyright": "© 2024 fluxGHG. Todos os direitos reservados.",
+                "copyright": `© ${currentYear} fluxGHG. Todos os direitos reservados.`,
                 "punchline": "Soluções inovadoras para monitoramento e análise de emissões de gases de efeito estufa usando eddy covariance e modelagem avançada."
             }
         }
@@ -173,23 +174,169 @@ document.addEventListener('DOMContentLoaded', () => {
             onEnter: () => document.querySelector('header').classList.add('scrolled'),
             onLeaveBack: () => document.querySelector('header').classList.remove('scrolled'),
         },
-        // Remove or comment out these lines:
-        // backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         duration: 0.3,
     });
 
-    // Animate sections on scroll
+    // Mobile menu toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('nav ul');
+    
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+    }
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        });
+    });
+
+    // Close menu when screen resizes to desktop width
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+    });
+
+    // Enhanced section animations with staggered effects
     gsap.utils.toArray('section').forEach(section => {
-        gsap.from(section.children, {
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            stagger: 0.2,
+        const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: section,
-                start: 'top 80%',
-            },
+                start: 'top 75%',
+            }
+        });
+        
+        tl.from(section.querySelector('h2'), {
+            opacity: 0,
+            y: 50,
+            duration: 0.8
+        });
+        
+        if (section.querySelector('.content-wrapper')) {
+            tl.from(section.querySelector('.content-wrapper').children, {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2
+            }, "-=0.4");
+        }
+        
+        if (section.querySelector('.about-grid')) {
+            tl.from(section.querySelectorAll('.about-item'), {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2
+            }, "-=0.4");
+        }
+        
+        if (section.querySelector('.services-container')) {
+            tl.from(section.querySelector('.services-intro'), {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            }, "-=0.4")
+            .from(section.querySelectorAll('.service-card'), {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2
+            }, "-=0.4");
+        }
+        
+        if (section.querySelector('.team-grid')) {
+            tl.from(section.querySelectorAll('.team-member'), {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2
+            }, "-=0.4");
+        }
+        
+        if (section.querySelector('form')) {
+            tl.from(section.querySelector('form'), {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            }, "-=0.4");
+        }
+    });
+
+    // Enhanced image parallax effect
+    const parallaxImages = document.querySelectorAll('.parallax-image');
+    
+    window.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        parallaxImages.forEach(image => {
+            const rect = image.getBoundingClientRect();
+            const imageX = rect.left + rect.width / 2;
+            const imageY = rect.top + rect.height / 2;
+            
+            const diffX = mouseX - imageX;
+            const diffY = mouseY - imageY;
+            
+            const maxMove = 15; // Maximum pixels to move
+            
+            // Calculate move distance with a damping factor for smoother effect
+            const moveX = (diffX / window.innerWidth) * maxMove;
+            const moveY = (diffY / window.innerHeight) * maxMove;
+            
+            // Apply transform with slight rotation for more dynamic effect
+            gsap.to(image, {
+                x: moveX,
+                y: moveY,
+                rotateX: moveY * 0.05,
+                rotateY: -moveX * 0.05,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+    });
+
+    // Add parallax scrolling effect to sections
+    gsap.utils.toArray('.eddy-covariance, .co2-modeling').forEach(section => {
+        const parallaxElements = section.querySelectorAll('.image-content');
+        
+        gsap.to(parallaxElements, {
+            yPercent: -20,
+            ease: "none",
+            scrollTrigger: {
+                trigger: section,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+    });
+
+    // Add modern hover effect for service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+                y: -15,
+                scale: 1.02,
+                boxShadow: '0 15px 30px rgba(0, 0, 0, 0.1)',
+                duration: 0.3
+            });
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                y: 0,
+                scale: 1,
+                boxShadow: '0 8px 16px rgba(0, 0, 0, 0.08)',
+                duration: 0.3
+            });
         });
     });
 
@@ -251,6 +398,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 showNotification('Message sent successfully!', 'success');
                 contactForm.reset();
+                
+                // Reset the helper text display after form submission
+                document.querySelectorAll('.form-helper-text').forEach(helper => {
+                    helper.style.opacity = '0';
+                });
             } else {
                 showNotification('Error sending message. Please try again.', 'error');
             }
@@ -288,31 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // Add parallax effect to images
-    const parallaxImages = document.querySelectorAll('.parallax-image');
-
-    window.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        parallaxImages.forEach(image => {
-            const rect = image.getBoundingClientRect();
-            const imageX = rect.left + rect.width / 2;
-            const imageY = rect.top + rect.height / 2;
-
-            const diffX = mouseX - imageX;
-            const diffY = mouseY - imageY;
-
-            const radialDistance = Math.sqrt(diffX * diffX + diffY * diffY);
-            const maxDistance = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight) / 2;
-
-            const moveX = (diffX / maxDistance) * 10; // Adjust the multiplier to control the effect intensity
-            const moveY = (diffY / maxDistance) * 10;
-
-            image.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-    });
 
     // Add this new code for header scroll effect
     const header = document.querySelector('header');
@@ -355,6 +482,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.textContent = value;
             }
         });
+        
+        // Update helper text for language changes
+        const helperTextContent = {
+            'name': {
+                en: 'Enter your full name',
+                pt_br: 'Digite seu nome completo'
+            },
+            'email': {
+                en: 'Enter a valid email address (e.g., name@example.com)',
+                pt_br: 'Digite um endereço de email válido (ex: nome@exemplo.com)'
+            },
+            'message': {
+                en: 'Describe how we can help you with carbon monitoring',
+                pt_br: 'Descreva como podemos ajudá-lo com monitoramento de carbono'
+            }
+        };
+        
+        // Update helper text language
+        document.querySelectorAll('.form-helper-text').forEach(helperText => {
+            const inputId = helperText.previousElementSibling.previousElementSibling.id;
+            helperText.textContent = helperTextContent[inputId][currentLang];
+        });
     }
 
     function changeLanguage(lang) {
@@ -368,16 +517,59 @@ document.addEventListener('DOMContentLoaded', () => {
         changeLanguage(e.target.value);
     });
 
-    // Add this function to handle input focus and blur events
+    // Add this function to properly handle the form field labels
     function setupFormInputs() {
         const inputs = document.querySelectorAll('input, textarea');
+        
+        // Create helper text elements for each input
+        const helperTextContent = {
+            'name': {
+                en: 'Enter your full name',
+                pt_br: 'Digite seu nome completo'
+            },
+            'email': {
+                en: 'Enter a valid email address (e.g., name@example.com)',
+                pt_br: 'Digite um endereço de email válido (ex: nome@exemplo.com)'
+            },
+            'message': {
+                en: 'Describe how we can help you with carbon monitoring',
+                pt_br: 'Descreva como podemos ajudá-lo com monitoramento de carbono'
+            }
+        };
+        
         inputs.forEach(input => {
+            // Set placeholder to space to ensure CSS selectors work properly
+            input.placeholder = ' ';
+            
+            // Create helper text element if it doesn't exist
+            if (!input.nextElementSibling.nextElementSibling) {
+                const helperText = document.createElement('div');
+                helperText.classList.add('form-helper-text');
+                helperText.textContent = helperTextContent[input.id][currentLang];
+                helperText.style.opacity = '0';
+                input.parentNode.appendChild(helperText);
+            }
+            
+            // Show label as active when input has content
+            if (input.value.trim() !== '') {
+                input.nextElementSibling.classList.add('active');
+            }
+            
             input.addEventListener('focus', () => {
                 input.nextElementSibling.classList.add('active');
+                // Show helper text on focus
+                if (input.nextElementSibling.nextElementSibling) {
+                    input.nextElementSibling.nextElementSibling.style.opacity = '1';
+                }
             });
+            
             input.addEventListener('blur', () => {
-                if (!input.value) {
+                if (!input.value.trim()) {
                     input.nextElementSibling.classList.remove('active');
+                }
+                // Hide helper text on blur
+                if (input.nextElementSibling.nextElementSibling) {
+                    input.nextElementSibling.nextElementSibling.style.opacity = '0';
                 }
             });
         });
