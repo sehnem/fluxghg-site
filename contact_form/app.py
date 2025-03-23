@@ -19,9 +19,9 @@ def lambda_handler(event, context):
     # Send email using SES
     SENDER = "Site FluxGHG <contato@fluxghg.com>"
     RECIPIENT = "contato@fluxghg.com"
-    SUBJECT = f"New contact form submission from {name}"
+    SUBJECT = f"Contato do site FluxGHG - {name}"
 
-    BODY_TEXT = f"Name: {name}\nEmail: {email}\nMessage: {message}"
+    BODY_TEXT = f"Nome: {name}\nEmail: {email}\nMensagem: {message}"
     
     CHARSET = "UTF-8"
 
