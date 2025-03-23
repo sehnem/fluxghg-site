@@ -74,10 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             "contact": {
                 "title": "Get in Touch",
+                "description": "We'd love to hear from you! Please fill out the form and our team will get back to you shortly.",
                 "name": "Your Name",
                 "email": "Your Email",
                 "message": "Your Message",
-                "send": "Send Message"
+                "send": "Send Message",
+                "email_label": "Email",
+                "location_label": "Location",
+                "connect_label": "Connect With Us"
             },
             "footer": {
                 "copyright": `© ${currentYear} fluxGHG. All rights reserved.`,
@@ -153,10 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             "contact": {
                 "title": "Entre em Contato",
+                "description": "Gostaríamos de ouvir de você! Por favor, preencha o formulário e nossa equipe entrará em contato em breve.",
                 "name": "Seu Nome",
                 "email": "Seu Email",
                 "message": "Sua Mensagem",
-                "send": "Enviar Mensagem"
+                "send": "Enviar Mensagem",
+                "email_label": "Email",
+                "location_label": "Localização",
+                "connect_label": "Conecte-se Conosco"
             },
             "footer": {
                 "copyright": `© ${currentYear} fluxGHG. Todos os direitos reservados.`,
@@ -266,6 +274,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 y: 30,
                 duration: 0.8
             }, "-=0.4");
+        }
+
+        if (section.querySelector('.contact-wrapper')) {
+            const contactTimeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section.querySelector('.contact-wrapper'),
+                    start: 'top 75%'
+                }
+            });
+            
+            contactTimeline
+                .from('.contact-info', {
+                    opacity: 0,
+                    x: -50,
+                    duration: 0.8,
+                    ease: "power2.out"
+                })
+                .from('.contact-description', {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.6
+                }, "-=0.4")
+                .from('.contact-detail', {
+                    opacity: 0,
+                    x: -30,
+                    duration: 0.5,
+                    stagger: 0.15
+                }, "-=0.4")
+                .from('.contact-form-container', {
+                    opacity: 0,
+                    x: 50,
+                    duration: 0.8,
+                    ease: "power2.out"
+                }, "-=0.4")
+                .from('.form-field', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.5,
+                    stagger: 0.1
+                }, "-=0.5")
+                .from('.submit-btn', {
+                    opacity: 0,
+                    y: 20,
+                    scale: 0.9,
+                    duration: 0.5
+                }, "-=0.3");
         }
     });
 
@@ -377,14 +431,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const message = document.getElementById('message').value.trim();
 
         if (name === '' || email === '' || message === '') {
-            showNotification('Please fill in all fields', 'error');
+            showNotification(
+                currentLang === 'en' ? 'Please fill in all fields' : 'Por favor, preencha todos os campos', 
+                'error'
+            );
             return;
         }
 
         if (!isValidEmail(email)) {
-            showNotification('Please enter a valid email address', 'error');
+            showNotification(
+                currentLang === 'en' ? 'Please enter a valid email address' : 'Por favor, insira um endereço de email válido', 
+                'error'
+            );
             return;
         }
+
+        // Add loading state to button
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalBtnContent = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="material-icons btn-icon loading">sync</span>`;
+        submitBtn.classList.add('loading');
 
         try {
             const response = await fetch('/contact', {
@@ -396,19 +463,36 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                showNotification('Message sent successfully!', 'success');
+                showNotification(
+                    currentLang === 'en' ? 'Message sent successfully!' : 'Mensagem enviada com sucesso!', 
+                    'success'
+                );
                 contactForm.reset();
                 
-                // Reset the helper text display after form submission
-                document.querySelectorAll('.form-helper-text').forEach(helper => {
-                    helper.style.opacity = '0';
+                // Reset form field states
+                const formFields = contactForm.querySelectorAll('.form-field');
+                formFields.forEach(field => {
+                    const input = field.querySelector('input, textarea');
+                    const icon = field.querySelector('.field-icon');
+                    if (icon) icon.style.color = 'var(--text-secondary)';
                 });
             } else {
-                showNotification('Error sending message. Please try again.', 'error');
+                showNotification(
+                    currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.', 
+                    'error'
+                );
             }
         } catch (error) {
             console.error('Error:', error);
-            showNotification('Error sending message. Please try again.', 'error');
+            showNotification(
+                currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.', 
+                'error'
+            );
+        } finally {
+            // Reset button state
+            submitBtn.innerHTML = originalBtnContent;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
         }
     });
 
@@ -519,60 +603,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add this function to properly handle the form field labels
     function setupFormInputs() {
-        const inputs = document.querySelectorAll('input, textarea');
+        const formFields = document.querySelectorAll('.form-field');
         
-        // Create helper text elements for each input
-        const helperTextContent = {
-            'name': {
-                en: 'Enter your full name',
-                pt_br: 'Digite seu nome completo'
-            },
-            'email': {
-                en: 'Enter a valid email address (e.g., name@example.com)',
-                pt_br: 'Digite um endereço de email válido (ex: nome@exemplo.com)'
-            },
-            'message': {
-                en: 'Describe how we can help you with carbon monitoring',
-                pt_br: 'Descreva como podemos ajudá-lo com monitoramento de carbono'
-            }
-        };
-        
-        inputs.forEach(input => {
+        formFields.forEach(field => {
+            const input = field.querySelector('input, textarea');
+            const label = field.querySelector('label');
+            
+            if (!input || !label) return;
+            
             // Set placeholder to space to ensure CSS selectors work properly
             input.placeholder = ' ';
             
-            // Create helper text element if it doesn't exist
-            if (!input.nextElementSibling.nextElementSibling) {
-                const helperText = document.createElement('div');
-                helperText.classList.add('form-helper-text');
-                helperText.textContent = helperTextContent[input.id][currentLang];
-                helperText.style.opacity = '0';
-                input.parentNode.appendChild(helperText);
-            }
-            
-            // Show label as active when input has content
-            if (input.value.trim() !== '') {
-                input.nextElementSibling.classList.add('active');
-            }
-            
+            // Add animation when field gets focus
             input.addEventListener('focus', () => {
-                input.nextElementSibling.classList.add('active');
-                // Show helper text on focus
-                if (input.nextElementSibling.nextElementSibling) {
-                    input.nextElementSibling.nextElementSibling.style.opacity = '1';
-                }
+                field.classList.add('focused');
+                const icon = field.querySelector('.field-icon');
+                if (icon) icon.style.color = 'var(--primary)';
             });
             
             input.addEventListener('blur', () => {
+                field.classList.remove('focused');
                 if (!input.value.trim()) {
-                    input.nextElementSibling.classList.remove('active');
+                    const icon = field.querySelector('.field-icon');
+                    if (icon) icon.style.color = 'var(--text-secondary)';
                 }
-                // Hide helper text on blur
-                if (input.nextElementSibling.nextElementSibling) {
-                    input.nextElementSibling.nextElementSibling.style.opacity = '0';
+            });
+            
+            // Show label as active when input has content on page load
+            if (input.value.trim() !== '') {
+                field.classList.add('has-content');
+                const icon = field.querySelector('.field-icon');
+                if (icon) icon.style.color = 'var(--primary)';
+            }
+            
+            // Handle input content changes
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    field.classList.add('has-content');
+                } else {
+                    field.classList.remove('has-content');
                 }
             });
         });
+        
+        // Add animation for submit button
+        const submitBtn = document.querySelector('.submit-btn');
+        if (submitBtn) {
+            submitBtn.addEventListener('mouseenter', () => {
+                const btnIcon = submitBtn.querySelector('.btn-icon');
+                if (btnIcon) {
+                    gsap.to(btnIcon, {
+                        x: 5,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                }
+            });
+            
+            submitBtn.addEventListener('mouseleave', () => {
+                const btnIcon = submitBtn.querySelector('.btn-icon');
+                if (btnIcon) {
+                    gsap.to(btnIcon, {
+                        x: 0,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        }
     }
 
     // Function to get user's preferred language

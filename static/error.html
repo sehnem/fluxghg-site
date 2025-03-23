@@ -3,26 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - Flux GHG</title>
+    <title>Error - fluxGHG</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .error-container h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 3rem;
+        }
+        
+        .error-container p {
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+        
+        .error-links {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .error-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .error-container .cta-button {
+            margin-top: 2rem;
+        }
+        
+        .divider {
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+            margin: 0.5rem auto 2rem;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <img src="assets/logo/horizontal_darkblue.svg" alt="Flux GHG Logo" class="logo">
+        <div class="header-content">
+            <a href="index.html">
+                <img src="assets/logo/horizontal_darkblue.svg" alt="fluxGHG Logo" class="logo">
+            </a>
+        </div>
     </header>
+
     <main>
-        <h1>Oops! Something went wrong</h1>
-        <p>We're sorry, but the page you're looking for cannot be found or an error has occurred.</p>
-        <p>Please try the following:</p>
-        <ul>
-            <li>Check the URL for any typos</li>
-            <li>Return to our <a href="index.html">homepage</a></li>
-            <li>If you continue to experience issues, please <a href="#contact">contact us</a></li>
-        </ul>
+        <div class="error-container">
+            <h1>Oops! Something went wrong</h1>
+            <div class="divider"></div>
+            
+            <p>We're sorry, but the page you're looking for cannot be found or an error has occurred.</p>
+            
+            <p>Please try the following:</p>
+            
+            <div class="error-links">
+                <a href="index.html">homepage</a>
+                <a href="index.html#contact">contact us</a>
+            </div>
+            
+            <a href="index.html" class="cta-button">Back to Home <span class="material-icons">arrow_forward</span></a>
+        </div>
     </main>
+
     <footer>
-        <p>&copy; 2023 Flux GHG. All rights reserved.</p>
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year">2023</span> fluxGHG. All rights reserved.</p>
+        </div>
     </footer>
-    <script src="script.js"></script>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
