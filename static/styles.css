@@ -71,6 +71,7 @@ h1 {
 h2 {
     font-weight: 700;
     font-size: 2.5rem;
+    margin-bottom: 1rem;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     -webkit-background-clip: text;
     background-clip: text;
@@ -99,7 +100,7 @@ a:hover::after {
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 3rem;
     width: 100%;
     box-sizing: border-box;
 }
@@ -159,7 +160,7 @@ header.scrolled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 3rem;
     box-sizing: border-box;
 }
 
@@ -397,11 +398,11 @@ section h2::after {
     display: flex;
     align-items: center;
     gap: 5rem;
-    margin-top: 2rem;
+    margin-top: 3rem;
     max-width: var(--max-width);
     margin-left: auto;
     margin-right: auto;
-    padding: 0 2rem;
+    padding: 0 3rem;
     box-sizing: border-box;
 }
 
@@ -414,23 +415,23 @@ section h2::after {
 }
 
 .text-content p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.8;
     color: var(--text);
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.5rem;
 }
 
 .image-content {
     flex: 1;
     position: relative;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
     box-sizing: border-box;
 }
 
 .image-content img {
     width: 100%;
-    height: auto;
+    height: 450px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     transition: var(--transition);
@@ -456,8 +457,8 @@ section h2::after {
 }
 
 /* Eddy covariance and CO2 modeling sections */
-.eddy-covariance, .co2-modeling {
-    padding: 12rem 0;
+.eddy-covariance, .co2-modeling, .water-monitoring {
+    padding: 8rem 0;
     position: relative;
     background-attachment: fixed;
     max-width: 100vw;
@@ -486,6 +487,17 @@ section h2::after {
     z-index: -1;
 }
 
+.water-monitoring::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, rgba(var(--primary-rgb), 0.08), transparent 70%);
+    z-index: -1;
+}
+
 .eddy-covariance .image-content img {
     transform: perspective(1000px) rotateY(5deg);
 }
@@ -495,11 +507,29 @@ section h2::after {
     left: -20px;
 }
 
+.water-monitoring .image-content img {
+    transform: perspective(1000px) rotateY(-5deg);
+}
+
+.water-monitoring .image-content::before {
+    top: 20px;
+    left: 20px;
+}
+
+.co2-modeling .image-content img {
+    transform: perspective(1000px) rotateY(5deg);
+}
+
+.co2-modeling .image-content::before {
+    top: -20px;
+    left: -20px;
+}
+
 /* About Us section */
 .about-us {
     background-color: var(--surface);
     position: relative;
-    padding: 12rem 0;
+    padding: 8rem 0;
 }
 
 .about-us::before {
@@ -578,7 +608,7 @@ section h2::after {
     background-color: var(--background);
     position: relative;
     overflow: hidden;
-    padding: 12rem 0;
+    padding: 8rem 0;
 }
 
 .services::before {
@@ -594,7 +624,7 @@ section h2::after {
 
 .services-intro {
     max-width: 800px;
-    margin: 0 auto 6rem;
+    margin: 0 auto 4rem;
     text-align: center;
     position: relative;
     z-index: 1;
@@ -608,13 +638,13 @@ section h2::after {
 
 .services-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2.5rem;
     position: relative;
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
-    max-width: var(--max-width);
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -715,7 +745,7 @@ section h2::after {
 /* Team section */
 .team {
     background-color: var(--surface);
-    padding: 12rem 0;
+    padding: 8rem 0;
     position: relative;
 }
 
@@ -850,7 +880,7 @@ section h2::after {
 .contact {
     background-color: var(--surface);
     position: relative;
-    padding: 10rem 0;
+    padding: 8rem 0;
 }
 
 .contact::before {
@@ -1547,8 +1577,8 @@ header.scrolled .language-selector::after {
         padding: 8rem 0;
     }
     
-    .eddy-covariance, .co2-modeling, .about-us, .services, .team, .contact {
-        padding: 8rem 0;
+    .eddy-covariance, .co2-modeling, .water-monitoring, .about-us, .services, .team, .contact {
+        padding: 6rem 0;
     }
     
     .container, .contact-wrapper, .services-container {
@@ -1591,9 +1621,13 @@ header.scrolled .language-selector::after {
     }
     
     .header-content {
-        padding: 0 1rem;
+        padding: 0 1.5rem;
         margin: 0;
         width: auto;
+    }
+    
+    .container {
+        padding: 0 1.5rem;
     }
     
     nav ul {
@@ -1645,8 +1679,8 @@ header.scrolled .language-selector::after {
     
     .content-wrapper {
         flex-direction: column;
-        gap: 3rem;
-        padding: 0 2rem;
+        gap: 2.5rem;
+        padding: 0 1.5rem;
     }
     
     .image-content {
@@ -1655,6 +1689,7 @@ header.scrolled .language-selector::after {
     
     .image-content img {
         transform: none !important;
+        height: 350px;
     }
     
     .hero-content {
@@ -1663,7 +1698,12 @@ header.scrolled .language-selector::after {
     }
     
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+        line-height: 1.6;
     }
     
     .language-selector {
@@ -1789,25 +1829,31 @@ header.scrolled .language-selector::after {
 
 @media (max-width: 576px) {
     section {
-        padding: 6rem 0;
+        padding: 5rem 0;
     }
     
-    .eddy-covariance, .co2-modeling, .about-us, .services, .team, .contact {
-        padding: 6rem 0;
+    .eddy-covariance, .co2-modeling, .water-monitoring, .about-us, .services, .team, .contact {
+        padding: 5rem 0;
     }
     
     /* Typography adjustments */
     h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
+        line-height: 1.3;
     }
     
     h2 {
-        font-size: 1.75rem;
+        font-size: 1.85rem;
+        margin-bottom: 1.5rem;
     }
     
     /* Component adjustments */
     .hero-content {
         padding: 2rem;
+    }
+    
+    .image-content img {
+        height: 280px;
     }
     
     .cta-button {

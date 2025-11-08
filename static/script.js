@@ -28,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 "paragraph1": "At fluxGHG, we go beyond simple measurements. Our team of experienced data scientists and agronomists leverage the wealth of data collected by our flux towers to develop sophisticated CO2 models. These models allow us to simulate and predict carbon dynamics not just for your farm, but for entire regions.",
                 "paragraph2": "By integrating data on soil organic matter, plant biomass, gas chambers, and remote sensing, we can extrapolate our findings to provide a comprehensive understanding of the carbon balance across various agricultural systems. This knowledge empowers you to make informed decisions about land management, crop selection, and carbon sequestration strategies, ultimately contributing to a more sustainable and climate-resilient agricultural sector in Brazil."
             },
+            "water_monitoring": {
+                "title": "Precision Water Management: Evapotranspiration Monitoring for Sustainable Agriculture",
+                "paragraph1": "FluxGHG's eddy covariance systems provide direct, real-time measurements of evapotranspiration (ET) - monitoring water evaporation from soil and transpiration from plants. This cutting-edge technology enables you to track actual water use by your crops with unprecedented accuracy.",
+                "paragraph2": "Our continuous ET monitoring empowers data-driven irrigation decisions, reducing water waste and maximizing crop productivity. By integrating ET data with soil moisture sensors and weather forecasts, we help develop precision irrigation strategies that conserve water while maintaining optimal growing conditions for Brazilian agriculture."
+            },
             "about": {
                 "title": "About Us",
                 "expertise": {
@@ -48,15 +53,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 "intro": "Our specialized services help Brazilian agriculture optimize carbon balance and resource management through cutting-edge technology and expertise.",
                 "installation": {
                     "title": "Installation of Measurement Systems for Greenhouse Gas Quantification",
-                    "description": "We install state-of-the-art flux towers in agricultural areas, providing the fastest and most precise monitoring method available. These towers measure carbon absorption and emission, offering invaluable data that can be utilized for carbon credit projects and enhancing the value of your products. Our approach ensures you get rapid insights to support sustainable farming decisions."
+                    "description": "We install state-of-the-art flux towers providing the fastest and most precise monitoring available. These systems measure carbon absorption and emissions, offering invaluable data for carbon credit projects and enhancing product value with rapid insights for sustainable farming."
                 },
                 "determination": {
                     "title": "Determination of Emission and Absorption Factors for Agricultural Areas",
-                    "description": "Many carbon projects rely on emission and absorption factors derived from US and European data, which often do not reflect the unique conditions of Brazilian agriculture. We specialize in calculating real, location-specific emission and absorption factors for your monitored systems, providing you with accurate, relevant, and trustworthy data tailored to your needs. This ensures your carbon assessments are as precise and applicable as possible."
+                    "description": "We calculate real, location-specific emission and absorption factors tailored to Brazilian agriculture, rather than relying on US and European data. This provides you with accurate, relevant, and trustworthy data ensuring your carbon assessments are as precise as possible."
                 },
                 "extrapolation": {
                     "title": "Extrapolation through Modeling and Remote Sensing",
-                    "description": "Our team employs advanced satellite imagery and sophisticated software to extrapolate data gathered from flux tower measurements, extending the insights to broader areas of your property or region. This approach allows us to deliver comprehensive assessments that cover larger landscapes, offering a detailed understanding of carbon dynamics on a bigger scale, empowering you to make data-driven decisions for your entire operation."
+                    "description": "Using advanced satellite imagery and sophisticated software, we extrapolate flux tower data to broader areas of your property or region. This delivers comprehensive assessments covering larger landscapes and empowering data-driven decisions for your entire operation."
+                },
+                "water_monitoring": {
+                    "title": "Hydric Monitoring and Evapotranspiration Analysis",
+                    "description": "Our eddy covariance systems provide real-time evapotranspiration measurements for precision irrigation management. Monitor actual water use, optimize irrigation schedules, reduce waste, and maximize crop productivity while conserving precious water resources in changing climate conditions."
                 }
             },
             "team": {
@@ -111,6 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 "paragraph1": "Na fluxGHG, vamos além de simples medições. Nossa equipe de cientistas de dados e agrônomos experientes aproveita a riqueza de dados coletados por nossas torres de fluxo para desenvolver modelos sofisticados de CO2. Esses modelos nos permitem simular e prever a dinâmica do carbono não apenas para sua fazenda, mas para regiões inteiras.",
                 "paragraph2": "Ao integrar dados sobre matéria orgânica do solo, biomassa vegetal, câmaras de gás e sensoriamento remoto, podemos extrapolar nossas descobertas para fornecer uma compreensão abrangente do balanço de carbono em vários sistemas agrícolas. Esse conhecimento permite que você tome decisões informadas sobre manejo do solo, seleção de culturas e estratégias de sequestro de carbono, contribuindo para um setor agrícola mais sustentável e resiliente ao clima no Brasil."
             },
+            "water_monitoring": {
+                "title": "Gestão Hídrica de Precisão: Monitoramento de Evapotranspiração para Agricultura Sustentável",
+                "paragraph1": "Os sistemas de eddy covariance da fluxGHG fornecem medições diretas e em tempo real da evapotranspiração (ET) - monitorando a evaporação da água do solo e transpiração das plantas. Esta tecnologia de ponta permite que você acompanhe o uso real de água pelas suas culturas com precisão sem precedentes.",
+                "paragraph2": "Nosso monitoramento contínuo de ET capacita decisões de irrigação baseadas em dados, reduzindo desperdício de água e maximizando produtividade das culturas. Ao integrar dados de ET com sensores de umidade do solo e previsões meteorológicas, desenvolvemos estratégias de irrigação de precisão que conservam água mantendo condições ideais de crescimento para a agricultura brasileira."
+            },
             "about": {
                 "title": "Sobre Nós",
                 "expertise": {
@@ -131,15 +145,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 "intro": "Nossos serviços especializados ajudam a agricultura brasileira a otimizar o balanço de carbono e o gerenciamento de recursos por meio de tecnologia de ponta e expertise.",
                 "installation": {
                     "title": "Instalação de Sistemas de Medição para Quantificação de Gases de Efeito Estufa",
-                    "description": "Instalamos torres de fluxo de última geração em áreas agrícolas, fornecendo o método de monitoramento mais rápido e preciso disponível. Essas torres medem a absorção e emissão de carbono, oferecendo dados inestimáveis que podem ser utilizados para projetos de crédito de carbono e aumentando o valor de seus produtos. Nossa abordagem garante que você obtenha insights rápidos para apoiar decisões agrícolas sustentáveis."
+                    "description": "Instalamos torres de fluxo de última geração fornecendo o monitoramento mais rápido e preciso disponível. Esses sistemas medem absorção e emissão de carbono, oferecendo dados inestimáveis para projetos de crédito de carbono e aumentando o valor de produtos com insights rápidos para agricultura sustentável."
                 },
                 "determination": {
                     "title": "Determinação de Fatores de Emissão e Absorção para Áreas Agrícolas",
-                    "description": "Muitos projetos de carbono dependem de fatores de emissão e absorção derivados de dados dos EUA e da Europa, que muitas vezes não refletem as condições únicas da agricultura brasileira. Nós nos especializamos em calcular fatores de emissão e absorção reais e específicos para seus sistemas monitorados, fornecendo dados precisos, relevantes e confiáveis adaptados às suas necessidades. Isso garante que suas avaliações de carbono sejam tão precisas e aplicáveis quanto possível."
+                    "description": "Calculamos fatores de emissão e absorção reais e específicos adaptados à agricultura brasileira, ao invés de depender de dados dos EUA e Europa. Isso fornece dados precisos, relevantes e confiáveis garantindo que suas avaliações de carbono sejam tão precisas quanto possível."
                 },
                 "extrapolation": {
                     "title": "Extrapolação através de Modelagem e Sensoriamento Remoto",
-                    "description": "Nossa equipe emprega imagens de satélite avançadas e software sofisticado para extrapolar dados coletados de medições de torres de fluxo, estendendo os insights para áreas mais amplas de sua propriedade ou região. Essa abordagem nos permite fornecer avaliações abrangentes que cobrem paisagens maiores, oferecendo uma compreensão detalhada da dinâmica do carbono em uma escala maior, capacitando você a tomar decisões baseadas em dados para toda a sua operação."
+                    "description": "Usando imagens de satélite avançadas e software sofisticado, extrapolamos dados de torres de fluxo para áreas mais amplas de sua propriedade ou região. Isso fornece avaliações abrangentes cobrindo paisagens maiores e capacitando decisões baseadas em dados para toda a sua operação."
+                },
+                "water_monitoring": {
+                    "title": "Monitoramento Hídrico e Análise de Evapotranspiração",
+                    "description": "Nossos sistemas de eddy covariance fornecem medições de evapotranspiração em tempo real para gestão de irrigação de precisão. Monitore o uso real de água, otimize cronogramas de irrigação, reduza desperdício e maximize a produtividade das culturas enquanto conserva recursos hídricos preciosos em condições climáticas em mudança."
                 }
             },
             "team": {
@@ -357,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add parallax scrolling effect to sections
-    gsap.utils.toArray('.eddy-covariance, .co2-modeling').forEach(section => {
+    gsap.utils.toArray('.eddy-covariance, .co2-modeling, .water-monitoring').forEach(section => {
         const parallaxElements = section.querySelectorAll('.image-content');
         
         gsap.to(parallaxElements, {
