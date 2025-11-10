@@ -1,5 +1,4 @@
 :root {
-    /* Modern color palette */
     --primary: #3498db;
     --primary-light: #5dade2;
     --primary-dark: #2980b9;
@@ -15,15 +14,13 @@
     --error: #e74c3c;
     --gray-light: #ecf0f1;
     --gray: #bdc3c7;
-    
-    /* Modern shadows */
+
     --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
     --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
     --shadow-strong: 0 15px 30px rgba(0, 0, 0, 0.12);
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
-    
-    /* More contemporary border-radius */
+
     --border-radius-sm: 8px;
     --border-radius: 16px;
     --border-radius-lg: 24px;
@@ -31,7 +28,6 @@
     --max-width: 1200px;
 }
 
-/* Base styles */
 html {
     scroll-behavior: smooth;
 }
@@ -53,7 +49,12 @@ body {
     cursor: default;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Playfair Display', serif;
     line-height: 1.2;
     margin-top: 0;
@@ -106,7 +107,10 @@ a:hover::after {
 }
 
 /* Common interactive elements */
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
     cursor: pointer;
 }
 
@@ -123,7 +127,11 @@ img:hover {
     color: var(--primary-dark);
 }
 
-a:focus, button:focus, input:focus, textarea:focus, select:focus {
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
@@ -225,6 +233,8 @@ header.scrolled nav ul li a:hover {
     transition: var(--transition);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    z-index: 1002;
+    position: relative;
 }
 
 .mobile-menu-toggle .material-icons {
@@ -248,6 +258,34 @@ header.scrolled .mobile-menu-toggle .material-icons {
 
 header.scrolled .mobile-menu-toggle:hover {
     background: rgba(var(--primary-rgb), 0.1);
+}
+
+.mobile-menu-toggle.active .material-icons {
+    transform: rotate(90deg);
+}
+
+/* Mobile menu overlay */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Prevent scrolling when menu is open */
+body.menu-open {
+    overflow: hidden;
 }
 
 /* Hero section */
@@ -457,7 +495,9 @@ section h2::after {
 }
 
 /* Eddy covariance and CO2 modeling sections */
-.eddy-covariance, .co2-modeling, .water-monitoring {
+.eddy-covariance,
+.co2-modeling,
+.water-monitoring {
     padding: 8rem 0;
     position: relative;
     background-attachment: fixed;
@@ -562,7 +602,7 @@ section h2::after {
     box-shadow: var(--shadow-light);
     transition: var(--transition);
     text-align: center;
-    border: 1px solid rgba(0,0,0,0.03);
+    border: 1px solid rgba(0, 0, 0, 0.03);
     position: relative;
     overflow: hidden;
 }
@@ -680,7 +720,7 @@ section h2::after {
     position: absolute;
     width: 200%;
     height: 200%;
-    background: radial-gradient(rgba(255,255,255,0.2), transparent 50%);
+    background: radial-gradient(rgba(255, 255, 255, 0.2), transparent 50%);
     top: -100%;
     left: -50%;
     transform: rotate(15deg);
@@ -780,7 +820,7 @@ section h2::after {
     transition: var(--transition);
     overflow: hidden;
     position: relative;
-    border: 1px solid rgba(0,0,0,0.03);
+    border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .team-member:hover {
@@ -1113,7 +1153,7 @@ section h2::after {
     z-index: 2;
 }
 
-.form-field textarea ~ .field-icon {
+.form-field textarea~.field-icon {
     top: 1.3rem;
     transform: none;
 }
@@ -1166,24 +1206,24 @@ section h2::after {
     border-color: transparent;
 }
 
-.form-field input:focus ~ .field-underline,
-.form-field textarea:focus ~ .field-underline,
-.form-field input:not(:placeholder-shown) ~ .field-underline,
-.form-field textarea:not(:placeholder-shown) ~ .field-underline {
+.form-field input:focus~.field-underline,
+.form-field textarea:focus~.field-underline,
+.form-field input:not(:placeholder-shown)~.field-underline,
+.form-field textarea:not(:placeholder-shown)~.field-underline {
     transform: scaleX(1);
 }
 
-.form-field input:focus ~ .field-icon,
-.form-field textarea:focus ~ .field-icon,
-.form-field input:not(:placeholder-shown) ~ .field-icon,
-.form-field textarea:not(:placeholder-shown) ~ .field-icon {
+.form-field input:focus~.field-icon,
+.form-field textarea:focus~.field-icon,
+.form-field input:not(:placeholder-shown)~.field-icon,
+.form-field textarea:not(:placeholder-shown)~.field-icon {
     color: var(--primary);
 }
 
-.form-field input:focus + label,
-.form-field textarea:focus + label,
-.form-field input:not(:placeholder-shown) + label,
-.form-field textarea:not(:placeholder-shown) + label {
+.form-field input:focus+label,
+.form-field textarea:focus+label,
+.form-field input:not(:placeholder-shown)+label,
+.form-field textarea:not(:placeholder-shown)+label {
     transform: translateY(-1.2rem) scale(0.8);
     color: var(--primary);
     font-weight: 500;
@@ -1302,7 +1342,7 @@ footer::before {
     line-height: 1.6;
 }
 
-.footer-links h4, 
+.footer-links h4,
 .footer-contact h4 {
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
@@ -1312,7 +1352,7 @@ footer::before {
     display: inline-block;
 }
 
-.footer-links h4::after, 
+.footer-links h4::after,
 .footer-contact h4::after {
     content: '';
     position: absolute;
@@ -1412,7 +1452,7 @@ footer::before {
     text-align: center;
     padding-top: 3rem;
     margin-top: 3rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.9rem;
     color: var(--text-light-secondary);
     position: relative;
@@ -1522,6 +1562,7 @@ header.scrolled .language-selector::after {
         opacity: 0;
         transform: translateY(40px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1532,9 +1573,11 @@ header.scrolled .language-selector::after {
     0% {
         transform: translateY(0px);
     }
+
     50% {
         transform: translateY(-10px);
     }
+
     100% {
         transform: translateY(0px);
     }
@@ -1564,109 +1607,152 @@ header.scrolled .language-selector::after {
     h1 {
         font-size: 3rem;
     }
-    
+
     h2 {
         font-size: 2.25rem;
     }
-    
+
     .content-wrapper {
         gap: 4rem;
     }
-    
+
     section {
         padding: 8rem 0;
     }
-    
-    .eddy-covariance, .co2-modeling, .water-monitoring, .about-us, .services, .team, .contact {
+
+    .eddy-covariance,
+    .co2-modeling,
+    .water-monitoring,
+    .about-us,
+    .services,
+    .team,
+    .contact {
         padding: 6rem 0;
     }
-    
-    .container, .contact-wrapper, .services-container {
-        padding: 0 3rem;
+
+    .container,
+    .contact-wrapper,
+    .services-container {
+        padding: 0 2.5rem;
     }
-    
-    /* Services layout for tablet */
+
+    .eddy-covariance h2,
+    .water-monitoring h2,
+    .co2-modeling h2 {
+        font-size: 2.25rem;
+    }
+
+    .text-content p {
+        font-size: 1.02rem;
+        line-height: 1.75;
+    }
+
+    .team-member img {
+        height: 270px;
+    }
+
+    .team-member h3 {
+        font-size: 1.6rem;
+    }
+
+    .team-member .role {
+        font-size: 0.92rem;
+    }
+
+    .team-member .description {
+        font-size: 0.98rem;
+    }
+
     .services-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 2.5rem;
         padding: 0 2.5rem;
         max-width: 100%;
     }
-    
+
     .service-icon-wrapper {
         padding: 3rem 2rem 2rem;
     }
-    
+
     .service-content {
         padding: 2.5rem 2rem;
     }
-    
+
     .service-content h3 {
         font-size: 1.4rem;
     }
-    
+
     .service-content p {
         font-size: 0.95rem;
     }
-    
-    /* Contact layout for tablet */
+
     .contact-wrapper {
         gap: 3rem;
     }
-    
+
     .contact-info {
         padding: 3.5rem 3rem;
     }
-    
+
     .contact-form {
         padding: 3.5rem 2.8rem;
     }
 }
 
 @media (max-width: 768px) {
-    /* Mobile menu */
+    header {
+        overflow: visible;
+    }
+
     .mobile-menu-toggle {
         display: flex;
     }
-    
+
     .header-content {
         padding: 0 1.5rem;
         margin: 0;
         width: auto;
+        overflow: visible;
     }
-    
+
     .container {
         padding: 0 1.5rem;
     }
-    
+
+    nav {
+        overflow: visible;
+    }
+
     nav ul {
         position: fixed;
         top: 0;
         right: -100%;
         flex-direction: column;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         height: 100vh;
         width: 80%;
         max-width: 350px;
         padding: 5rem 2rem 2rem;
-        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-        transition: var(--transition);
-        z-index: 999;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 1001;
         align-items: flex-start;
         justify-content: flex-start;
+        overflow-y: auto;
+        margin: 0;
     }
-    
+
     nav ul.active {
         right: 0;
     }
-    
+
     nav ul li {
         margin: 0.8rem 0;
         width: 100%;
     }
-    
+
     nav ul li a {
         color: var(--text);
         display: block;
@@ -1674,201 +1760,286 @@ header.scrolled .language-selector::after {
         width: 100%;
         border-radius: var(--border-radius-sm);
     }
-    
+
     nav ul li a:hover {
         background-color: rgba(var(--primary-rgb), 0.1);
         color: var(--primary);
         transform: translateY(0);
     }
-    
-    /* Layout adjustments */
-    .container, .contact-wrapper, .services-container {
+
+    .container,
+    .contact-wrapper,
+    .services-container {
         padding: 0 2rem;
     }
-    
+
     .content-wrapper {
         flex-direction: column;
         gap: 2.5rem;
         padding: 0 1.5rem;
     }
-    
+
+    .eddy-covariance h2,
+    .water-monitoring h2,
+    .co2-modeling h2 {
+        font-size: 1.9rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+
+    .about-us h2 {
+        font-size: 2rem;
+    }
+
+    .about-item h3 {
+        font-size: 1.5rem;
+    }
+
+    .about-item p {
+        font-size: 0.98rem;
+        line-height: 1.7;
+    }
+
+    .text-content p {
+        font-size: 1rem;
+        line-height: 1.75;
+        margin-bottom: 1.25rem;
+    }
+
     .image-content {
         order: -1;
     }
-    
+
     .image-content img {
         transform: none !important;
-        height: 350px;
+        height: 320px;
     }
-    
+
     .hero-content {
         max-width: 90%;
         padding: 2.5rem;
     }
-    
+
     .hero h1 {
         font-size: 2.2rem;
     }
-    
+
     .hero p {
         font-size: 1.1rem;
         line-height: 1.6;
     }
-    
+
     .language-selector {
         margin: 1.5rem 0 0;
     }
-    
-    #language-select, 
+
+    #language-select,
     .language-selector::after {
         color: var(--text);
     }
-    
+
     #language-select {
         background-color: rgba(var(--primary-rgb), 0.1);
         border-color: rgba(var(--primary-rgb), 0.2);
     }
-    
-    /* Footer adjustments */
+
     .footer-content {
         grid-template-columns: 1fr;
         gap: 3rem;
     }
-    
-    .footer-logo, .footer-links, .footer-contact {
+
+    .footer-logo,
+    .footer-links,
+    .footer-contact {
         text-align: center;
     }
-    
+
     .footer-logo {
         align-items: center;
     }
-    
-    .footer-links h4::after, .footer-contact h4::after {
+
+    .footer-links h4::after,
+    .footer-contact h4::after {
         left: 50%;
         transform: translateX(-50%);
     }
-    
+
     .footer-contact p {
         justify-content: center;
     }
-    
+
     .footer-contact p .material-icons {
         margin-right: 0.5rem;
     }
-    
-    /* Grid items and containers */
-    .about-item, .service-card, .team-member {
+
+    .about-item,
+    .service-card,
+    .team-member {
         width: 100%;
         margin-left: auto;
         margin-right: auto;
         box-sizing: border-box;
     }
-    
-    .about-grid, .services-container, .team-grid {
+
+    .about-grid,
+    .services-container,
+    .team-grid {
         width: 100%;
         padding: 0 1.5rem;
         box-sizing: border-box;
     }
-    
+
     .services-intro {
         padding: 0 1rem;
         margin-bottom: 3rem;
     }
-    
+
     .services-intro p {
         font-size: 1.05rem;
         line-height: 1.65;
     }
-    
+
     .container {
         padding-left: 0;
         padding-right: 0;
         max-width: 100%;
     }
-    
-    .text-content, .image-content {
+
+    .text-content,
+    .image-content {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
         width: 100%;
     }
-    
+
     section h2 {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
         width: 100%;
     }
-    
-    /* Contact form for mobile */
+
     .contact-wrapper {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 2.5rem;
         padding: 0 1.5rem;
         align-items: start;
     }
-    
-    .contact-info {
-        padding: 3rem 2.5rem;
-    }
-    
-    .contact-description {
+
+    .contact h2 {
+        font-size: 2rem;
         margin-bottom: 2.5rem;
     }
-    
-    .contact-detail {
-        margin-bottom: 2rem;
+
+    .contact-info {
+        padding: 2.5rem 2rem;
     }
-    
+
+    .contact-info h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-description {
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        line-height: 1.65;
+    }
+
+    .contact-detail {
+        margin-bottom: 1.75rem;
+    }
+
+    .contact-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .contact-icon .material-icons {
+        font-size: 1.3rem;
+    }
+
+    .contact-text h3 {
+        font-size: 1rem;
+    }
+
+    .contact-text p {
+        font-size: 0.9rem;
+    }
+
     .contact-form-container {
         height: auto;
     }
-    
+
     .contact-form {
-        padding: 3rem 2.5rem;
+        padding: 2.5rem 2rem;
     }
-    
+
     .input-group {
         grid-template-columns: 1fr;
         gap: 0;
         margin-bottom: 0;
     }
-    
+
+    .form-field {
+        margin-bottom: 1.8rem;
+    }
+
+    .form-field input,
+    .form-field textarea {
+        font-size: 0.95rem;
+        padding: 0.9rem 0 0.9rem 2.3rem;
+    }
+
+    .form-field textarea {
+        min-height: 90px;
+    }
+
+    .field-icon {
+        font-size: 1.25rem;
+    }
+
+    .form-field label {
+        left: 2.3rem;
+        font-size: 0.95rem;
+    }
+
     .submit-btn {
         width: 100%;
         justify-content: center;
         padding: 1.1rem 2rem;
+        font-size: 1rem;
     }
-    
-    /* Services container for mobile */
+
     .services-container {
         grid-template-columns: 1fr;
         gap: 2.5rem;
         padding: 0 1.5rem;
         max-width: 100%;
     }
-    
+
     .service-card {
         margin: 0;
         width: 100%;
     }
-    
+
     .service-icon-wrapper {
         padding: 2.5rem 1.5rem 2rem;
     }
-    
+
     .service-icon-wrapper .material-icons {
         font-size: 3.5rem;
     }
-    
+
     .service-content {
         padding: 2rem 1.5rem;
     }
-    
+
     .service-content h3 {
         font-size: 1.35rem;
         margin-bottom: 1rem;
         line-height: 1.4;
     }
-    
+
     .service-content p {
         font-size: 0.95rem;
         line-height: 1.65;
@@ -1880,195 +2051,302 @@ header.scrolled .language-selector::after {
     section {
         padding: 5rem 0;
     }
-    
-    .eddy-covariance, .co2-modeling, .water-monitoring, .about-us, .services, .team, .contact {
+
+    .eddy-covariance,
+    .co2-modeling,
+    .water-monitoring,
+    .about-us,
+    .services,
+    .team,
+    .contact {
         padding: 5rem 0;
     }
-    
-    /* Typography adjustments */
+
     h1 {
         font-size: 2.2rem;
         line-height: 1.3;
     }
-    
+
     h2 {
-        font-size: 1.85rem;
+        font-size: 1.75rem;
         margin-bottom: 1.5rem;
     }
-    
-    /* Component adjustments */
+
+    .eddy-covariance h2,
+    .water-monitoring h2,
+    .co2-modeling h2 {
+        font-size: 1.65rem;
+        margin-bottom: 1.75rem;
+        padding: 0 0.75rem;
+    }
+
+    .text-content p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1.15rem;
+    }
+
+    .about-us h2,
+    .services h2,
+    .team h2,
+    .contact h2 {
+        font-size: 1.75rem;
+    }
+
     .hero-content {
         padding: 2rem;
     }
-    
+
     .image-content img {
-        height: 280px;
+        height: 260px;
     }
-    
+
     .cta-button {
         padding: 1rem 2rem;
     }
-    
-    .about-grid, .services-container, .team-grid {
+
+    .about-grid,
+    .services-container,
+    .team-grid {
         gap: 2rem;
     }
-    
+
     .about-item {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.25rem;
     }
-    
+
+    .about-item h3 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-item p {
+        font-size: 0.9rem;
+        line-height: 1.65;
+    }
+
+    .about-icon {
+        font-size: 3rem;
+        margin-bottom: 1.25rem;
+    }
+
     .service-card {
         padding: 0;
     }
-    
+
     form {
         padding: 1.5rem;
         width: calc(100% - 2rem);
         max-width: 100%;
     }
-    
+
     .form-group {
         margin-bottom: 3rem;
     }
-    
+
     .form-group label {
         font-size: 0.95rem;
     }
-    
+
     .service-icon-wrapper {
         padding: 2rem 1.5rem 1.5rem;
     }
-    
+
     .service-icon-wrapper .material-icons {
         font-size: 3rem;
     }
-    
+
     .service-content {
         padding: 1.75rem 1.25rem;
     }
-    
+
     .service-content h3 {
         font-size: 1.25rem;
         margin-bottom: 0.9rem;
         line-height: 1.4;
     }
-    
+
     .service-content p {
         font-size: 0.9rem;
         line-height: 1.6;
         margin-bottom: 1.25rem;
     }
-    
+
     .services-container {
         padding: 0 1rem;
         gap: 2rem;
     }
-    
+
     .services-intro p {
         font-size: 1.05rem;
     }
-    
+
+    .team-member {
+        padding: 0;
+    }
+
+    .team-member img {
+        height: 240px;
+    }
+
     .team-member h3 {
-        font-size: 1.5rem;
-        padding: 0 1.5rem;
+        font-size: 1.4rem;
+        padding: 0 1.25rem;
+        margin: 1.5rem 0 0.4rem;
     }
-    
-    .team-member .role,
+
+    .team-member .role {
+        padding: 0 1.25rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.9rem;
+    }
+
     .team-member .description {
-        padding: 0 1.5rem;
+        padding: 0 1.25rem 1.5rem;
+        font-size: 0.9rem;
+        line-height: 1.65;
     }
-    
-    /* Layout adjustments */
-    .about-item, .service-card, .team-member {
+
+    .social-links {
+        margin: 1rem 0 1.5rem;
+        gap: 0.8rem;
+    }
+
+    .social-link {
+        width: 36px;
+        height: 36px;
+    }
+
+    .social-link .material-icons {
+        font-size: 1.1rem;
+    }
+
+    .team-grid {
+        gap: 2rem;
+    }
+
+    .about-item,
+    .service-card,
+    .team-member {
         width: 100%;
     }
-    
-    .text-content, .image-content, section h2 {
+
+    .text-content,
+    .image-content,
+    section h2 {
         padding-left: 1rem;
         padding-right: 1rem;
     }
-    
+
     .services h2 {
         padding-left: 1rem;
         padding-right: 1rem;
     }
-    
+
     .services .container {
         padding: 0;
     }
-    
+
     .services-intro {
         padding: 0 1rem;
         margin-bottom: 2.5rem;
     }
-    
-    /* Remove horizontal overflow */
-    body, html {
+
+    body,
+    html {
         overflow-x: hidden;
         width: 100%;
         max-width: 100%;
     }
-    
-    .container, .content-wrapper, form {
+
+    .container,
+    .content-wrapper,
+    form {
         width: 100%;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .contact-info {
-        padding: 2.5rem 2rem;
+        padding: 2rem 1.5rem;
     }
-    
+
     .contact-info h2 {
-        font-size: 2.2rem;
+        font-size: 1.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .contact-description {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .contact-detail {
         margin-bottom: 1.5rem;
     }
-    
-    .contact-description {
-        font-size: 1rem;
-        margin-bottom: 2.5rem;
+
+    .contact-icon {
+        width: 38px;
+        height: 38px;
+        margin-right: 0.8rem;
     }
-    
-    .contact-detail {
-        margin-bottom: 2rem;
-    }
-    
-    .contact-form {
-        padding: 2.5rem 1.75rem;
-    }
-    
-    .form-field {
-        margin-bottom: 2rem;
-    }
-    
-    .form-field input,
-    .form-field textarea {
-        font-size: 0.95rem;
-        padding: 0.9rem 0 0.9rem 2.2rem;
-    }
-    
-    .field-icon {
+
+    .contact-icon .material-icons {
         font-size: 1.2rem;
     }
-    
-    .form-field label {
-        left: 2.2rem;
-        top: 0.9rem;
+
+    .contact-text h3 {
         font-size: 0.95rem;
+        margin-bottom: 0.25rem;
     }
-    
+
+    .contact-text p {
+        font-size: 0.85rem;
+    }
+
+    .contact-form {
+        padding: 2rem 1.5rem;
+    }
+
+    .form-field {
+        margin-bottom: 1.75rem;
+    }
+
+    .form-field input,
+    .form-field textarea {
+        font-size: 0.9rem;
+        padding: 0.85rem 0 0.85rem 2.1rem;
+    }
+
+    .form-field textarea {
+        min-height: 85px;
+    }
+
+    .field-icon {
+        font-size: 1.15rem;
+    }
+
+    .form-field label {
+        left: 2.1rem;
+        top: 0.85rem;
+        font-size: 0.9rem;
+    }
+
     .submit-btn {
         padding: 1rem 1.5rem;
         font-size: 0.95rem;
+        margin-top: 0.5rem;
     }
-    
-    /* Layout adjustments */
-    .container, .contact-wrapper, .services-container {
+
+    .container,
+    .contact-wrapper,
+    .services-container {
         padding: 0 1.5rem;
     }
-    
+
     .form-field textarea {
         min-height: 90px;
     }
@@ -2099,6 +2377,7 @@ header.scrolled .language-selector::after {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

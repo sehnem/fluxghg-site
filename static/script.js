@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // GSAP animations
     gsap.registerPlugin(ScrollTrigger);
     const currentYear = new Date().getFullYear();
-    
+
     // Directly embed translations
     const translations = {
         en: {
@@ -206,27 +206,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile menu toggle
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('nav ul');
-    
+    const menuOverlay = document.querySelector('.menu-overlay');
+
+    function closeMenu() {
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        mobileMenuToggle.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    }
+
+    function openMenu() {
+        navMenu.classList.add('active');
+        menuOverlay.classList.add('active');
+        mobileMenuToggle.classList.add('active');
+        document.body.classList.add('menu-open');
+    }
+
     if (mobileMenuToggle) {
         mobileMenuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
+            if (navMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
+    }
+
+    // Close menu when clicking on overlay
+    if (menuOverlay) {
+        menuOverlay.addEventListener('click', closeMenu);
     }
 
     // Close menu when clicking on a link
     document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            document.body.classList.remove('menu-open');
-        });
+        link.addEventListener('click', closeMenu);
     });
 
     // Close menu when screen resizes to desktop width
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
-            navMenu.classList.remove('active');
-            document.body.classList.remove('menu-open');
+            closeMenu();
         }
     });
 
@@ -238,13 +257,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 start: 'top 75%',
             }
         });
-        
+
         tl.from(section.querySelector('h2'), {
             opacity: 0,
             y: 50,
             duration: 0.8
         });
-        
+
         if (section.querySelector('.content-wrapper')) {
             tl.from(section.querySelector('.content-wrapper').children, {
                 opacity: 0,
@@ -253,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 stagger: 0.2
             }, "-=0.4");
         }
-        
+
         if (section.querySelector('.about-grid')) {
             tl.from(section.querySelectorAll('.about-item'), {
                 opacity: 0,
@@ -262,21 +281,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 stagger: 0.2
             }, "-=0.4");
         }
-        
+
         if (section.querySelector('.services-container')) {
             tl.from(section.querySelector('.services-intro'), {
                 opacity: 0,
                 y: 30,
                 duration: 0.8
             }, "-=0.4")
-            .from(section.querySelectorAll('.service-card'), {
-                opacity: 0,
-                y: 50,
-                duration: 0.8,
-                stagger: 0.2
-            }, "-=0.4");
+                .from(section.querySelectorAll('.service-card'), {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    stagger: 0.2
+                }, "-=0.4");
         }
-        
+
         if (section.querySelector('.team-grid')) {
             tl.from(section.querySelectorAll('.team-member'), {
                 opacity: 0,
@@ -285,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 stagger: 0.2
             }, "-=0.4");
         }
-        
+
         if (section.querySelector('form')) {
             tl.from(section.querySelector('form'), {
                 opacity: 0,
@@ -301,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: 'top 75%'
                 }
             });
-            
+
             contactTimeline
                 .from('.contact-info', {
                     opacity: 0,
@@ -343,25 +362,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Enhanced image parallax effect
     const parallaxImages = document.querySelectorAll('.parallax-image');
-    
+
     window.addEventListener('mousemove', (e) => {
         const mouseX = e.clientX;
         const mouseY = e.clientY;
-        
+
         parallaxImages.forEach(image => {
             const rect = image.getBoundingClientRect();
             const imageX = rect.left + rect.width / 2;
             const imageY = rect.top + rect.height / 2;
-            
+
             const diffX = mouseX - imageX;
             const diffY = mouseY - imageY;
-            
+
             const maxMove = 15; // Maximum pixels to move
-            
+
             // Calculate move distance with a damping factor for smoother effect
             const moveX = (diffX / window.innerWidth) * maxMove;
             const moveY = (diffY / window.innerHeight) * maxMove;
-            
+
             // Apply transform with slight rotation for more dynamic effect
             gsap.to(image, {
                 x: moveX,
@@ -377,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add parallax scrolling effect to sections
     gsap.utils.toArray('.eddy-covariance, .co2-modeling, .water-monitoring').forEach(section => {
         const parallaxElements = section.querySelectorAll('.image-content');
-        
+
         gsap.to(parallaxElements, {
             yPercent: -20,
             ease: "none",
@@ -401,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 0.3
             });
         });
-        
+
         card.addEventListener('mouseleave', () => {
             gsap.to(card, {
                 y: 0,
@@ -450,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (name === '' || email === '' || message === '') {
             showNotification(
-                currentLang === 'en' ? 'Please fill in all fields' : 'Por favor, preencha todos os campos', 
+                currentLang === 'en' ? 'Please fill in all fields' : 'Por favor, preencha todos os campos',
                 'error'
             );
             return;
@@ -458,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isValidEmail(email)) {
             showNotification(
-                currentLang === 'en' ? 'Please enter a valid email address' : 'Por favor, insira um endereço de email válido', 
+                currentLang === 'en' ? 'Please enter a valid email address' : 'Por favor, insira um endereço de email válido',
                 'error'
             );
             return;
@@ -482,11 +501,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 showNotification(
-                    currentLang === 'en' ? 'Message sent successfully!' : 'Mensagem enviada com sucesso!', 
+                    currentLang === 'en' ? 'Message sent successfully!' : 'Mensagem enviada com sucesso!',
                     'success'
                 );
                 contactForm.reset();
-                
+
                 // Reset form field states
                 const formFields = contactForm.querySelectorAll('.form-field');
                 formFields.forEach(field => {
@@ -496,14 +515,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 showNotification(
-                    currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.', 
+                    currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.',
                     'error'
                 );
             }
         } catch (error) {
             console.error('Error:', error);
             showNotification(
-                currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.', 
+                currentLang === 'en' ? 'Error sending message. Please try again.' : 'Erro ao enviar mensagem. Por favor tente novamente.',
                 'error'
             );
         } finally {
@@ -584,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.textContent = value;
             }
         });
-        
+
         // Update helper text for language changes
         const helperTextContent = {
             'name': {
@@ -600,7 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pt_br: 'Descreva como podemos ajudá-lo com monitoramento de carbono'
             }
         };
-        
+
         // Update helper text language
         document.querySelectorAll('.form-helper-text').forEach(helperText => {
             const inputId = helperText.previousElementSibling.previousElementSibling.id;
@@ -622,23 +641,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add this function to properly handle the form field labels
     function setupFormInputs() {
         const formFields = document.querySelectorAll('.form-field');
-        
+
         formFields.forEach(field => {
             const input = field.querySelector('input, textarea');
             const label = field.querySelector('label');
-            
+
             if (!input || !label) return;
-            
+
             // Set placeholder to space to ensure CSS selectors work properly
             input.placeholder = ' ';
-            
+
             // Add animation when field gets focus
             input.addEventListener('focus', () => {
                 field.classList.add('focused');
                 const icon = field.querySelector('.field-icon');
                 if (icon) icon.style.color = 'var(--primary)';
             });
-            
+
             input.addEventListener('blur', () => {
                 field.classList.remove('focused');
                 if (!input.value.trim()) {
@@ -646,14 +665,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (icon) icon.style.color = 'var(--text-secondary)';
                 }
             });
-            
+
             // Show label as active when input has content on page load
             if (input.value.trim() !== '') {
                 field.classList.add('has-content');
                 const icon = field.querySelector('.field-icon');
                 if (icon) icon.style.color = 'var(--primary)';
             }
-            
+
             // Handle input content changes
             input.addEventListener('input', () => {
                 if (input.value.trim() !== '') {
@@ -663,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        
+
         // Add animation for submit button
         const submitBtn = document.querySelector('.submit-btn');
         if (submitBtn) {
@@ -677,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             });
-            
+
             submitBtn.addEventListener('mouseleave', () => {
                 const btnIcon = submitBtn.querySelector('.btn-icon');
                 if (btnIcon) {
@@ -694,7 +713,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to get user's preferred language
     function getPreferredLanguage() {
         const languages = navigator.languages || [navigator.language || navigator.userLanguage];
-        
+
         for (let lang of languages) {
             lang = lang.substr(0, 2).toLowerCase();
             if (lang === 'pt') {
@@ -704,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return 'en';
             }
         }
-        
+
         return 'en'; // Default to English if no match
     }
 
