@@ -1589,7 +1589,8 @@ header.scrolled .language-selector::after {
     .services-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 2.5rem;
-        padding: 0 3rem;
+        padding: 0 2.5rem;
+        max-width: 100%;
     }
     
     .service-icon-wrapper {
@@ -1598,6 +1599,14 @@ header.scrolled .language-selector::after {
     
     .service-content {
         padding: 2.5rem 2rem;
+    }
+    
+    .service-content h3 {
+        font-size: 1.4rem;
+    }
+    
+    .service-content p {
+        font-size: 0.95rem;
     }
     
     /* Contact layout for tablet */
@@ -1749,7 +1758,7 @@ header.scrolled .language-selector::after {
     
     /* Grid items and containers */
     .about-item, .service-card, .team-member {
-        width: calc(100% - 2rem);
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
         box-sizing: border-box;
@@ -1757,8 +1766,18 @@ header.scrolled .language-selector::after {
     
     .about-grid, .services-container, .team-grid {
         width: 100%;
-        padding: 0 1rem;
+        padding: 0 1.5rem;
         box-sizing: border-box;
+    }
+    
+    .services-intro {
+        padding: 0 1rem;
+        margin-bottom: 3rem;
+    }
+    
+    .services-intro p {
+        font-size: 1.05rem;
+        line-height: 1.65;
     }
     
     .container {
@@ -1824,6 +1843,36 @@ header.scrolled .language-selector::after {
         grid-template-columns: 1fr;
         gap: 2.5rem;
         padding: 0 1.5rem;
+        max-width: 100%;
+    }
+    
+    .service-card {
+        margin: 0;
+        width: 100%;
+    }
+    
+    .service-icon-wrapper {
+        padding: 2.5rem 1.5rem 2rem;
+    }
+    
+    .service-icon-wrapper .material-icons {
+        font-size: 3.5rem;
+    }
+    
+    .service-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .service-content h3 {
+        font-size: 1.35rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+    
+    .service-content p {
+        font-size: 0.95rem;
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
     }
 }
 
@@ -1864,8 +1913,12 @@ header.scrolled .language-selector::after {
         gap: 2rem;
     }
     
-    .about-item, .service-card {
-        padding: 2rem;
+    .about-item {
+        padding: 2rem 1.5rem;
+    }
+    
+    .service-card {
+        padding: 0;
     }
     
     form {
@@ -1883,11 +1936,36 @@ header.scrolled .language-selector::after {
     }
     
     .service-icon-wrapper {
-        padding: 2.5rem 1.5rem 1.5rem;
+        padding: 2rem 1.5rem 1.5rem;
+    }
+    
+    .service-icon-wrapper .material-icons {
+        font-size: 3rem;
     }
     
     .service-content {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.25rem;
+    }
+    
+    .service-content h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .service-content p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+    }
+    
+    .services-container {
+        padding: 0 1rem;
+        gap: 2rem;
+    }
+    
+    .services-intro p {
+        font-size: 1.05rem;
     }
     
     .team-member h3 {
@@ -1910,9 +1988,18 @@ header.scrolled .language-selector::after {
         padding-right: 1rem;
     }
     
-    .services-container {
-        width: 100%;
-        grid-template-columns: 1fr;
+    .services h2 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .services .container {
+        padding: 0;
+    }
+    
+    .services-intro {
+        padding: 0 1rem;
+        margin-bottom: 2.5rem;
     }
     
     /* Remove horizontal overflow */
