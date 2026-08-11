@@ -1,129 +1,167 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: SAM template for static website with CloudFront and contact form Lambda
+Description: >
+  fluxGHG — static site on S3 behind CloudFront (private bucket, OAC) plus the
+  contact form Lambda. This is the production stack: it serves fluxghg.com,
+  www.fluxghg.com and new.fluxghg.com. The retired `site-fluxghg` stack (see
+  ../legacy-v1/template.yaml) is left running, alias-less, as a rollback path.
 
 Parameters:
   DomainName:
     Type: String
+    Default: new.fluxghg.com
+    Description: >
+      Primary hostname — names the bucket, is the certificate's primary CN,
+      and keeps working as an alias alongside RootDomainName.
   RootDomainName:
     Type: String
-    Description: The root domain name (e.g., fluxghg.com)
+    Default: fluxghg.com
+    Description: The apex domain. www.<RootDomainName> is derived from it.
   HostedZoneId:
     Type: AWS::Route53::HostedZone::Id
-    Description: The ID of the hosted zone for the domain
+    Description: Hosted zone containing all three domains.
+  BucketName:
+    Type: String
+    Default: fluxghg-site-v2
+    Description: >
+      Private origin bucket. Not named after a domain — the bucket is never
+      addressed directly, only through CloudFront.
 
 Resources:
-  StaticWebsiteBucket:
+  # ---------------------------------------------------------------- origin
+  SiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref DomainName
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: error.html
+      BucketName: !Ref BucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
       OwnershipControls:
         Rules:
-          - ObjectOwnership: BucketOwnerPreferred
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
+          - ObjectOwnership: BucketOwnerEnforced
 
-  StaticWebsiteBucketPolicy:
+  SiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref StaticWebsiteBucket
+      Bucket: !Ref SiteBucket
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: Allow
-            Principal: '*'
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
             Action: 's3:GetObject'
-            Resource: !Join ['', ['arn:aws:s3:::', !Ref StaticWebsiteBucket, '/*']]
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                'AWS:SourceArn': !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
 
-  ApiGatewayApi:
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # ------------------------------------------------------------- edge logic
+  # Two jobs, both cheap enough for a viewer-request function:
+  #   1. send visitors in Brazil and Portugal to the pt-BR site
+  #   2. map directory-style URLs onto the index.html objects a private S3
+  #      origin needs, since it resolves keys exactly and has no index document
+  ViewerRequestFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${AWS::StackName}-viewer-request'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Locale redirect by viewer country + directory index rewrite.
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        var PT_COUNTRIES = { BR: true, PT: true };
+
+        function redirect(location) {
+          return {
+            statusCode: 302,
+            statusDescription: 'Found',
+            headers: {
+              location: { value: location },
+              'cache-control': { value: 'no-cache' },
+              vary: { value: 'CloudFront-Viewer-Country' }
+            }
+          };
+        }
+
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri;
+
+          // Locale only applies to the site root; deep links are explicit.
+          if (uri === '/' || uri === '/index.html') {
+            var cookies = request.cookies || {};
+            var chosen = cookies['fluxghg-lang'] ? cookies['fluxghg-lang'].value : '';
+
+            if (chosen) {
+              // An explicit choice in the language switcher always wins.
+              if (chosen === 'pt') {
+                return redirect('/pt/');
+              }
+            } else {
+              var header = request.headers['cloudfront-viewer-country'];
+              var country = header ? header.value.toUpperCase() : '';
+              if (PT_COUNTRIES[country]) {
+                return redirect('/pt/');
+              }
+            }
+          }
+
+          if (uri.endsWith('/')) {
+            request.uri = uri + 'index.html';
+          } else if (!uri.split('/').pop().includes('.')) {
+            request.uri = uri + '/index.html';
+          }
+          return request;
+        }
+
+  # ----------------------------------------------------------------- backend
+  ContactFormApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      # The form is same-origin through CloudFront, so no CORS config needed.
 
-  CloudFrontDistribution:
-    Type: AWS::CloudFront::Distribution
+  ContactFormFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      DistributionConfig:
-        DefaultRootObject: index.html
-        Enabled: true
-        HttpVersion: http2
-        PriceClass: PriceClass_100
-        ViewerCertificate:
-          AcmCertificateArn: !Ref Certificate
-          SslSupportMethod: sni-only
-        # new.fluxghg.com is served by the separate `fluxghg-site-v2` stack
-        # (see v2/template.yaml) while the new site is being validated.
-        # DomainName is still used for the bucket name and the certificate,
-        # so it must not be changed here.
-        Aliases:
-          - !Ref RootDomainName
-          - !Sub 'www.${RootDomainName}'
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          Compress: true
-          DefaultTTL: 86400
-          ForwardedValues:
-            QueryString: false
-          MaxTTL: 31536000
-          MinTTL: 0
-          TargetOriginId: S3Origin
-          ViewerProtocolPolicy: redirect-to-https
-        Origins:
-          - DomainName: !GetAtt StaticWebsiteBucket.RegionalDomainName
-            Id: S3Origin
-            S3OriginConfig: {}
-          - DomainName: !Sub "${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com"
-            Id: ApiGateway
-            OriginPath: /Prod
-            CustomOriginConfig:
-              HTTPSPort: 443
-              OriginProtocolPolicy: https-only
-        CacheBehaviors:
-          - PathPattern: '/contact'
-            TargetOriginId: ApiGateway
-            AllowedMethods:
-              - DELETE
-              - GET
-              - HEAD
-              - OPTIONS
-              - PATCH
-              - POST
-              - PUT
-            ForwardedValues:
-              QueryString: false
-            ViewerProtocolPolicy: redirect-to-https
+      CodeUri: contact_form/
+      Handler: app.lambda_handler
+      Runtime: python3.11
+      Timeout: 10
+      MemorySize: 256
+      Events:
+        ContactPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ContactFormApi
+            Path: /contact
+            Method: post
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: '*'
 
-  # The A record for new.fluxghg.com now belongs to the fluxghg-site-v2 stack.
-
-  RootDomainRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Ref RootDomainName
-      Type: A
-      AliasTarget:
-        HostedZoneId: Z2FDTNDATAQYW2
-        DNSName: !GetAtt CloudFrontDistribution.DomainName
-
-  WwwDomainRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub 'www.${RootDomainName}'
-      Type: A
-      AliasTarget:
-        HostedZoneId: Z2FDTNDATAQYW2
-        DNSName: !GetAtt CloudFrontDistribution.DomainName
-
+  # ----------------------------------------------------------------- delivery
   Certificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
@@ -140,31 +178,130 @@ Resources:
         - DomainName: !Sub 'www.${RootDomainName}'
           HostedZoneId: !Ref HostedZoneId
 
-  ContactFormFunction:
-    Type: AWS::Serverless::Function
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
     Properties:
-      CodeUri: contact_form/
-      Handler: app.lambda_handler
-      Runtime: python3.11
-      Events:
-        ContactFormApi:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGatewayApi
-            Path: /contact
-            Method: post
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - ses:SendEmail
-                - ses:SendRawEmail
-              Resource: "*"
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub 'fluxGHG — ${RootDomainName}'
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        Aliases:
+          - !Ref DomainName
+          - !Ref RootDomainName
+          - !Sub 'www.${RootDomainName}'
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+          - Id: ApiOrigin
+            DomainName: !Sub '${ContactFormApi}.execute-api.${AWS::Region}.amazonaws.com'
+            OriginPath: /Prod
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          # Managed-CachingOptimized
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          # Managed-SecurityHeadersPolicy
+          ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt ViewerRequestFunction.FunctionMetadata.FunctionARN
+
+        CacheBehaviors:
+          # Fingerprinted build output — safe to cache hard at the edge.
+          - PathPattern: '/_astro/*'
+            TargetOriginId: S3Origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS]
+            Compress: true
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+            ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
+
+          - PathPattern: '/contact'
+            TargetOriginId: ApiOrigin
+            ViewerProtocolPolicy: https-only
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachedMethods: [GET, HEAD]
+            # Managed-CachingDisabled
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            # Managed-AllViewerExceptHostHeader — API Gateway rejects a
+            # forwarded Host header of the site domain.
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 60
+
+  DomainRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - Name: !Ref DomainName
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2 # fixed CloudFront zone id
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+        - Name: !Ref DomainName
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+        - Name: !Ref RootDomainName
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+        - Name: !Ref RootDomainName
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+        - Name: !Sub 'www.${RootDomainName}'
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+        - Name: !Sub 'www.${RootDomainName}'
+          Type: AAAA
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
 
 Outputs:
-  WebsiteURL:
-    Value: !GetAtt StaticWebsiteBucket.WebsiteURL
-    Description: URL for website hosted on S3
-  CloudFrontURL:
+  SiteURL:
+    Description: Public URL of the production site
+    Value: !Sub 'https://${RootDomainName}'
+  BucketName:
+    Description: Origin bucket for `aws s3 sync`
+    Value: !Ref SiteBucket
+  DistributionId:
+    Description: CloudFront distribution id, for cache invalidation
+    Value: !Ref CloudFrontDistribution
+  DistributionDomain:
     Value: !GetAtt CloudFrontDistribution.DomainName
-    Description: CloudFront Distribution Domain Name

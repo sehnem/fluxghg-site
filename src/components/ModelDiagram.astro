@@ -58,7 +58,7 @@ const cellColor = (v: number) =>
 
 <svg
   viewBox="0 0 720 372"
-  class="h-auto w-full min-w-[34rem]"
+  class="h-auto w-full"
   role="img"
   aria-label={`${t.modeling.inputsLabel} → ${t.modeling.modelLabel} → ${t.modeling.outputLabel}`}
   data-model-diagram
@@ -88,24 +88,24 @@ const cellColor = (v: number) =>
     y="24"
     fill="#6f858f"
     font-family="ui-monospace, monospace"
-    font-size="11"
-    letter-spacing="1.6">{t.modeling.inputsLabel.toUpperCase()}</text
+    font-size="13"
+    letter-spacing="1.4">{t.modeling.inputsLabel.toUpperCase()}</text
   >
   <text
     x={NET_X}
     y="24"
     fill="#6f858f"
     font-family="ui-monospace, monospace"
-    font-size="11"
-    letter-spacing="1.6">{t.modeling.modelLabel.toUpperCase()}</text
+    font-size="13"
+    letter-spacing="1.4">{t.modeling.modelLabel.toUpperCase()}</text
   >
   <text
     x={OUT_X}
     y="24"
     fill="#6f858f"
     font-family="ui-monospace, monospace"
-    font-size="11"
-    letter-spacing="1.6">{t.modeling.outputLabel.toUpperCase()}</text
+    font-size="13"
+    letter-spacing="1.4">{t.modeling.outputLabel.toUpperCase()}</text
   >
 
   <!-- input cards -->
@@ -127,15 +127,15 @@ const cellColor = (v: number) =>
           y={IN_Y(i) + 23}
           fill={i === 0 ? '#9bd489' : '#3fc3de'}
           font-family="ui-monospace, monospace"
-          font-size="9.5"
-          letter-spacing="1.4"
+          font-size="11"
+          letter-spacing="1.2"
         >
           {input.tag.toUpperCase()}
         </text>
-        <text x={IN_X + 16} y={IN_Y(i) + 40} fill="#e8f0f4" font-size="13.5" font-weight="500">
+        <text x={IN_X + 16} y={IN_Y(i) + 40} fill="#e8f0f4" font-size="15" font-weight="500">
           {input.title}
         </text>
-        <text x={IN_X + 16} y={IN_Y(i) + 54} fill="#6f858f" font-size="10">
+        <text x={IN_X + 16} y={IN_Y(i) + 54} fill="#6f858f" font-size="11.5">
           {input.detail}
         </text>
 
@@ -170,7 +170,7 @@ const cellColor = (v: number) =>
               x2={layers[li + 1]!.x}
               y2={nodeY(layers[li + 1]!.n, j)}
               stroke="#3fc3de"
-              stroke-width="0.8"
+              stroke-width="1"
               class="synapse"
               style={`--layer:${li}`}
             />
@@ -256,16 +256,16 @@ const cellColor = (v: number) =>
       y="0"
       fill="#6f858f"
       font-family="ui-monospace, monospace"
-      font-size="10"
-      letter-spacing="1.2">− CO₂</text
+      font-size="11.5"
+      letter-spacing="1.1">− CO₂</text
     >
     <text
       x={OUT_SIZE - 34}
       y="0"
       fill="#6f858f"
       font-family="ui-monospace, monospace"
-      font-size="10"
-      letter-spacing="1.2">+ CO₂</text
+      font-size="11.5"
+      letter-spacing="1.1">+ CO₂</text
     >
     <rect x="44" y="-9" width={OUT_SIZE - 86} height="6" rx="3" fill="url(#nee)"></rect>
   </g>

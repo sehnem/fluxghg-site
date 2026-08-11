@@ -38,10 +38,8 @@ const t = useTranslations(lang);
 
     <!-- Diagram + instrument photograph -->
     <div class="mt-16 grid gap-4 lg:grid-cols-12">
-      <figure class="panel flex flex-col justify-center overflow-hidden p-4 sm:p-8 lg:col-span-8" data-reveal>
-        <div class="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-          <EddyDiagram lang={lang} />
-        </div>
+      <figure class="panel flex flex-col justify-center overflow-hidden p-3 sm:p-8 lg:col-span-8" data-reveal>
+        <EddyDiagram lang={lang} />
         <figcaption class="mt-4 max-w-[62ch] text-xs text-mute">
           {t.method.diagramCaption}
         </figcaption>

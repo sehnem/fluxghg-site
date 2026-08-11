@@ -228,12 +228,12 @@ const en = {
   },
   team: {
     eyebrow: 'Team',
-    title: 'The people behind the towers.',
+    title: 'The people behind fluxGHG.',
     members: [
       {
         name: 'Alecsander Mergen',
         role: 'Co-founder & CEO',
-        body: 'Ph.D. candidate in Physics with long experience installing and setting up eddy covariance systems. Alecsander understands in depth how gas measurement in the field works, and leads the monitoring side of the company.',
+        body: 'Ph.D. candidate in Physics with long experience installing and setting up eddy covariance systems. Alecsander understands in depth how gas measurement in the field works, and leads monitoring and model development at the company.',
       },
       {
         name: 'Josué M. Sehnem',
@@ -489,12 +489,12 @@ const pt: typeof en = {
   },
   team: {
     eyebrow: 'Equipe',
-    title: 'Quem está por trás das torres.',
+    title: 'As pessoas por trás da fluxGHG.',
     members: [
       {
         name: 'Alecsander Mergen',
         role: 'Co-fundador & CEO',
-        body: 'Doutorando em Física com longa experiência na instalação e configuração de sistemas de eddy covariance. Alecsander entende a fundo como funciona a medição de gases em campo e lidera a frente de monitoramento da empresa.',
+        body: 'Doutorando em Física com longa experiência na instalação e configuração de sistemas de eddy covariance. Alecsander entende a fundo como funciona a medição de gases em campo e lidera o desenvolvimento de modelos e o monitoramento da empresa.',
       },
       {
         name: 'Josué M. Sehnem',

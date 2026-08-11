@@ -57,7 +57,7 @@ const SENSOR_Y = 92;
 
 <svg
   viewBox="0 0 720 330"
-  class="h-auto w-full min-w-[34rem]"
+  class="h-auto w-full"
   role="img"
   aria-label={`${labels.rising} / ${labels.sinking} — ${labels.footprint}`}
   data-eddy-diagram
@@ -126,8 +126,8 @@ const SENSOR_Y = 92;
       text-anchor="middle"
       fill="#6f858f"
       font-family="ui-monospace, monospace"
-      font-size="11"
-      letter-spacing="1.6">{labels.footprint.toUpperCase()}</text
+      font-size="13"
+      letter-spacing="1.4">{labels.footprint.toUpperCase()}</text
     >
   </g>
 
@@ -237,21 +237,21 @@ const SENSOR_Y = 92;
       y={SENSOR_Y - 6}
       fill="#e8f0f4"
       font-family="ui-monospace, monospace"
-      font-size="12"
-      letter-spacing="1.4">{labels.rate}</text
+      font-size="14"
+      letter-spacing="1.2">{labels.rate}</text
     >
     <text
       x={TOWER_X + 26}
       y={SENSOR_Y + 12}
       fill="#6f858f"
       font-family="ui-monospace, monospace"
-      font-size="11"
+      font-size="12.5"
       letter-spacing="1">w′ · c′</text
     >
   </g>
 
   <!-- legend -->
-  <g font-family="ui-monospace, monospace" font-size="11" letter-spacing="1.2">
+  <g font-family="ui-monospace, monospace" font-size="13" letter-spacing="1.1">
     <circle cx="12" cy="26" r="4" fill="#9bd489"></circle>
     <text x="26" y="30" fill="#6f858f">{labels.rising.toUpperCase()}</text>
     <circle cx="12" cy="50" r="4" fill="#3fc3de"></circle>

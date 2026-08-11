@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://new.fluxghg.com',
+  site: 'https://fluxghg.com',
   trailingSlash: 'ignore',
   build: {
     // Emit `about/index.html` style paths so S3 + CloudFront serve clean URLs.

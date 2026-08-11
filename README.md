@@ -1,11 +1,14 @@
-# fluxGHG — site v2
+# fluxGHG — website
 
-Rebuild of the fluxGHG site, deployed to **https://new.fluxghg.com** for validation
-while `fluxghg.com` continues to run the current site untouched.
+Production site for **https://fluxghg.com**, also served at `www.fluxghg.com`
+and `new.fluxghg.com` (kept working for continuity). Astro 5 + Tailwind 4,
+statically generated. Everything is frontend except the contact form, which
+posts to a Lambda + SES backend (`contact_form/app.py`).
 
-Astro 5 + Tailwind 4, statically generated. Everything is frontend except the
-contact form, which posts to the same Lambda + SES backend as the current site
-(`contact_form/app.py`, unchanged).
+The previous site is archived under [`legacy-v1/`](legacy-v1/) — its
+CloudFront distribution and S3 bucket are still deployed, just detached from
+every domain, as a rollback path. See that directory's own notes if a
+rollback is ever needed.
 
 ## Running it
 
@@ -24,12 +27,9 @@ npm run check      # astro + typescript diagnostics
 ./deploy.sh --site   # content-only: rebuild and sync, no CloudFormation
 ```
 
-**Before the very first deploy** the domain has to be released from the old
-stack. `site-fluxghg` currently serves `new.fluxghg.com`, `fluxghg.com` and
-`www.fluxghg.com` from a single CloudFront distribution, and CloudFront refuses
-to let two distributions claim the same alias. Steps are documented at the top
-of `deploy.sh`. Until that is done the deploy fails cleanly with
-`CNAMEAlreadyExists` and production is unaffected.
+`template.yaml` provisions a private S3 bucket behind CloudFront (OAC, no
+public bucket access), the contact form Lambda + API Gateway, an ACM
+certificate covering all three domains, and the Route53 records for each.
 
 ## Layout
 
@@ -50,9 +50,10 @@ src/
     flux-field.ts       hero turbulence canvas + diurnal NEE trace
   assets/img/           source images (optimised at build by astro:assets)
 public/                 fonts, logos, favicon, og.jpg, robots.txt
-contact_form/app.py     the existing Lambda, copied as-is
+contact_form/app.py     the contact form Lambda
 template.yaml           SAM stack: S3 + CloudFront + ACM + Route53 + Lambda
 shots.mjs               dev-only screenshot pass over the built site
+legacy-v1/              the retired v1 site, kept as a rollback path
 ```
 
 ### Content
@@ -70,13 +71,9 @@ at `/` — use `/pt/` directly to review the Portuguese pages locally.
 
 ### Things worth knowing
 
-- **The site is `noindex`.** `robots.txt` disallows everything and every page
-  carries a `noindex` meta tag, so the validation host cannot compete with
-  `fluxghg.com` in search. Remove both in `Base.astro` and `public/robots.txt`
-  when this becomes the real site.
-- **The contact form contract is unchanged** — it posts `{name, email, message}`
-  to `/contact`. The optional "company" field and the page URL are appended to
-  the message body so the Lambda did not need to change.
+- **The contact form contract** posts `{name, email, message}` to `/contact`.
+  The optional "company" field and the page URL are appended to the message
+  body so the Lambda did not need to change.
 - **Diagrams are hand-built SVG**, not images: they restyle with the palette,
   stay sharp at any size, and carry the translated labels.
 - **Motion respects `prefers-reduced-motion`** everywhere, and the hero canvas

@@ -1,4 +1,0 @@
-# Staging / validation host — keep it out of the index so it never competes
-# with the production site at fluxghg.com.
-User-agent: *
-Disallow: /

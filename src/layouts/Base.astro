@@ -8,11 +8,11 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
-  /** Staging site: keep it out of search results while it is being validated. */
+  /** Set true to keep a page out of search results (e.g. a future staging copy). */
   noindex?: boolean;
 }
 
-const { lang, title, description, noindex = true } = Astro.props;
+const { lang, title, description, noindex = false } = Astro.props;
 const t = useTranslations(lang);
 
 const pageTitle = title ?? t.meta.title;

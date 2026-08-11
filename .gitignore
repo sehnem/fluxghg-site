@@ -1,63 +1,28 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
+# Node / Astro
+node_modules/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-*.manifest
-*.spec
-pip-log.txt
-pip-delete-this-directory.txt
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Virtual Environment
-venv/
-env/
-ENV/
+.astro/
+.shots/
 
 # AWS SAM
 .aws-sam/
 packaged.yaml
 samconfig.toml
 
-# IDEs and Editors
+# Python (legacy-v1 Lambda tooling)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# IDEs and editors
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
 
-# OS generated files
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -69,13 +34,9 @@ Thumbs.db
 # Logs
 *.log
 
-# Local development
+# Local env
 .env
 .env.local
 .env.*.local
 
-# Serverless directories
 .serverless/
-
-# Node (in case you use Node.js with your SAM project)
-node_modules/
