@@ -1,0 +1,309 @@
+---
+/**
+ * Eddy covariance, drawn as simply as the idea allows:
+ * turbulent swirls over the crop surface, a tower sampling them, and the
+ * footprint the tower actually represents.
+ */
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const labels =
+  lang === 'pt'
+    ? {
+        rising: 'Ar subindo',
+        sinking: 'Ar descendo',
+        footprint: 'Área medida',
+        rate: '10 Hz',
+        surface: 'Superfície',
+      }
+    : {
+        rising: 'Air rising',
+        sinking: 'Air sinking',
+        footprint: 'Area measured',
+        rate: '10 Hz',
+        surface: 'Surface',
+      };
+
+/** Arc on a circle centred at the origin, angles in degrees, clockwise. */
+const polar = (r: number, deg: number) => {
+  const a = (deg * Math.PI) / 180;
+  return [r * Math.cos(a), r * Math.sin(a)] as const;
+};
+const arc = (r: number, from: number, to: number) => {
+  const [x0, y0] = polar(r, from);
+  const [x1, y1] = polar(r, to);
+  const large = Math.abs(to - from) > 180 ? 1 : 0;
+  const sweep = to > from ? 1 : 0;
+  return `M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+};
+
+// x, y, radius, direction, animation duration, delay
+const vortices = [
+  { x: 104, y: 190, r: 42, dir: 'up', dur: 17, delay: 0 },
+  { x: 214, y: 108, r: 27, dir: 'down', dur: 11, delay: -3 },
+  { x: 318, y: 196, r: 35, dir: 'up', dur: 15, delay: -6 },
+  { x: 414, y: 104, r: 23, dir: 'down', dur: 9, delay: -1 },
+  { x: 500, y: 188, r: 30, dir: 'up', dur: 13, delay: -4 },
+] as const;
+
+const GROUND = 262;
+const TOWER_X = 616;
+const SENSOR_Y = 92;
+---
+
+<svg
+  viewBox="0 0 720 330"
+  class="h-auto w-full min-w-[34rem]"
+  role="img"
+  aria-label={`${labels.rising} / ${labels.sinking} — ${labels.footprint}`}
+  data-eddy-diagram
+>
+  <defs>
+    <marker
+      id="vtxUp"
+      viewBox="0 0 10 10"
+      refX="5"
+      refY="5"
+      markerWidth="4.5"
+      markerHeight="4.5"
+      orient="auto"
+    >
+      <path d="M0 0 L10 5 L0 10 z" fill="#9bd489"></path>
+    </marker>
+    <marker
+      id="vtxDown"
+      viewBox="0 0 10 10"
+      refX="5"
+      refY="5"
+      markerWidth="4.5"
+      markerHeight="4.5"
+      orient="auto"
+    >
+      <path d="M0 0 L10 5 L0 10 z" fill="#3fc3de"></path>
+    </marker>
+    <linearGradient id="surfaceFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7eb56f" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#7eb56f" stop-opacity="0.04" />
+    </linearGradient>
+  </defs>
+
+  <!-- ground + crop surface band -->
+  <rect x="0" y={GROUND} width="720" height="20" fill="url(#surfaceFade)"></rect>
+  <line x1="0" y1={GROUND} x2="720" y2={GROUND} stroke="#a4b8bf" stroke-opacity="0.3"></line>
+  <g stroke="#7eb56f" stroke-opacity="0.4" stroke-width="1.2">
+    {
+      Array.from({ length: 72 }, (_, i) => (
+        <line
+          x1={5 + i * 10}
+          y1={GROUND}
+          x2={5 + i * 10 + ((i % 3) - 1)}
+          y2={GROUND - (7 + ((i * 5) % 7))}
+        />
+      ))
+    }
+  </g>
+
+  <!-- footprint: the upwind area the tower represents -->
+  <g>
+    <ellipse
+      cx="330"
+      cy={GROUND}
+      rx="286"
+      ry="20"
+      fill="#239fbc"
+      fill-opacity="0.06"
+      stroke="#3fc3de"
+      stroke-opacity="0.65"
+      stroke-dasharray="5 9"
+      class="footprint"></ellipse>
+    <text
+      x="330"
+      y={GROUND + 40}
+      text-anchor="middle"
+      fill="#6f858f"
+      font-family="ui-monospace, monospace"
+      font-size="11"
+      letter-spacing="1.6">{labels.footprint.toUpperCase()}</text
+    >
+  </g>
+
+  <!-- sampling height: the level at which the tower intercepts the eddies -->
+  <line
+    x1="30"
+    y1={SENSOR_Y}
+    x2={TOWER_X - 20}
+    y2={SENSOR_Y}
+    stroke="#a4b8bf"
+    stroke-opacity="0.16"
+    stroke-dasharray="2 7"></line>
+
+  <!-- turbulent vortices -->
+  {
+    vortices.map((v) => (
+      <g transform={`translate(${v.x} ${v.y})`}>
+        <g
+          class="vortex"
+          style={`--dur:${v.dur}s; --delay:${v.delay}s; --dir:${v.dir === 'up' ? 1 : -1}`}
+        >
+          <path
+            d={arc(v.r, 35, 320)}
+            fill="none"
+            stroke={v.dir === 'up' ? '#9bd489' : '#3fc3de'}
+            stroke-opacity="0.8"
+            stroke-width="2"
+            stroke-linecap="round"
+            marker-end={v.dir === 'up' ? 'url(#vtxUp)' : 'url(#vtxDown)'}
+          />
+          <path
+            d={arc(v.r * 0.52, 210, 60)}
+            fill="none"
+            stroke={v.dir === 'up' ? '#9bd489' : '#3fc3de'}
+            stroke-opacity="0.4"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <circle
+            cx={v.r * 0.52}
+            cy="0"
+            r="2.6"
+            fill={v.dir === 'up' ? '#9bd489' : '#3fc3de'}
+            opacity="0.9"
+          />
+        </g>
+        {/* net vertical transport */}
+        <path
+          d={
+            v.dir === 'up'
+              ? `M 0 ${v.r + 16} L 0 ${-v.r - 16}`
+              : `M 0 ${-v.r - 16} L 0 ${v.r + 16}`
+          }
+          stroke={v.dir === 'up' ? '#9bd489' : '#3fc3de'}
+          stroke-opacity="0.22"
+          stroke-width="1.2"
+          stroke-dasharray="2 5"
+        />
+      </g>
+    ))
+  }
+
+  <!-- tower -->
+  <g>
+    <line
+      x1={TOWER_X}
+      y1={GROUND}
+      x2={TOWER_X}
+      y2={SENSOR_Y}
+      stroke="#e8f0f4"
+      stroke-opacity="0.8"
+      stroke-width="2.5"></line>
+    {
+      Array.from({ length: 5 }, (_, i) => (
+        <line
+          x1={TOWER_X - 7}
+          y1={GROUND - 16 - i * 28}
+          x2={TOWER_X + 7}
+          y2={GROUND - 16 - i * 28}
+          stroke="#e8f0f4"
+          stroke-opacity="0.28"
+          stroke-width="1.2"
+        />
+      ))
+    }
+    <!-- sonic anemometer head -->
+    <path
+      d={`M ${TOWER_X - 15} ${SENSOR_Y} L ${TOWER_X - 15} ${SENSOR_Y - 15} L ${TOWER_X + 15} ${SENSOR_Y - 15} L ${TOWER_X + 15} ${SENSOR_Y}`}
+      fill="none"
+      stroke="#e8f0f4"
+      stroke-opacity="0.8"
+      stroke-width="2"
+      stroke-linecap="round"></path>
+    <circle cx={TOWER_X} cy={SENSOR_Y} r="4.5" fill="#3fc3de"></circle>
+    <circle
+      cx={TOWER_X}
+      cy={SENSOR_Y}
+      r="10"
+      fill="none"
+      stroke="#3fc3de"
+      stroke-width="1.2"
+      class="ping"
+      style={`--cx:${TOWER_X}px; --cy:${SENSOR_Y}px`}></circle>
+
+    <text
+      x={TOWER_X + 26}
+      y={SENSOR_Y - 6}
+      fill="#e8f0f4"
+      font-family="ui-monospace, monospace"
+      font-size="12"
+      letter-spacing="1.4">{labels.rate}</text
+    >
+    <text
+      x={TOWER_X + 26}
+      y={SENSOR_Y + 12}
+      fill="#6f858f"
+      font-family="ui-monospace, monospace"
+      font-size="11"
+      letter-spacing="1">w′ · c′</text
+    >
+  </g>
+
+  <!-- legend -->
+  <g font-family="ui-monospace, monospace" font-size="11" letter-spacing="1.2">
+    <circle cx="12" cy="26" r="4" fill="#9bd489"></circle>
+    <text x="26" y="30" fill="#6f858f">{labels.rising.toUpperCase()}</text>
+    <circle cx="12" cy="50" r="4" fill="#3fc3de"></circle>
+    <text x="26" y="54" fill="#6f858f">{labels.sinking.toUpperCase()}</text>
+  </g>
+</svg>
+
+<style>
+  .vortex {
+    transform-origin: 0 0;
+    animation: vortex-spin var(--dur, 14s) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes vortex-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+  .vortex[style*='--dir:-1'] {
+    animation-direction: reverse;
+  }
+  .footprint {
+    animation: footprint-drift 26s linear infinite;
+  }
+  @keyframes footprint-drift {
+    to {
+      stroke-dashoffset: -140;
+    }
+  }
+  .ping {
+    transform-origin: var(--cx) var(--cy);
+    animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  @keyframes ping {
+    0% {
+      scale: 0.55;
+      opacity: 0.85;
+    }
+    75%,
+    100% {
+      scale: 2.2;
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vortex,
+    .footprint,
+    .ping {
+      animation: none;
+    }
+    .ping {
+      opacity: 0.3;
+    }
+  }
+</style>

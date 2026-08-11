@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.aws-sam/
+.DS_Store
+*.pyc
+__pycache__/
+.env
+.shots/

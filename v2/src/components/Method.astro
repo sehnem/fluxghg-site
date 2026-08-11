@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import towerImg from '../assets/img/sonic-anemometer.jpg';
+import EddyDiagram from './EddyDiagram.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="method" class="relative overflow-hidden border-y border-line bg-ink py-24 md:py-36">
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_15%_0%,color-mix(in_oklab,var(--color-flux-700)_22%,transparent),transparent)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page relative">
+    <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <p class="eyebrow" data-reveal>
+          <span class="h-px w-8 bg-flux-500"></span>
+          {t.method.eyebrow}
+        </p>
+        <h2 class="mt-6 text-h2 font-semibold" data-reveal style="--reveal-delay:80ms">
+          {t.method.title}
+        </h2>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7">
+        <p class="text-lead text-mist" data-reveal style="--reveal-delay:160ms">
+          {t.method.lead}
+        </p>
+      </div>
+    </div>
+
+    <!-- Diagram + instrument photograph -->
+    <div class="mt-16 grid gap-4 lg:grid-cols-12">
+      <figure class="panel flex flex-col justify-center overflow-hidden p-4 sm:p-8 lg:col-span-8" data-reveal>
+        <div class="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <EddyDiagram lang={lang} />
+        </div>
+        <figcaption class="mt-4 max-w-[62ch] text-xs text-mute">
+          {t.method.diagramCaption}
+        </figcaption>
+      </figure>
+
+      <figure
+        class="relative overflow-hidden rounded-[1.25rem] border border-line lg:col-span-4"
+        data-reveal
+        style="--reveal-delay:120ms"
+      >
+        <Image
+          src={towerImg}
+          alt={t.method.imageCaption}
+          widths={[420, 760]}
+          sizes="(min-width: 1024px) 32vw, 100vw"
+          loading="lazy"
+          class="h-64 w-full object-cover object-[55%_35%] [filter:saturate(0.85)_brightness(0.92)] transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] hover:scale-105 lg:h-full"
+        />
+        <figcaption
+          class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void via-void/80 to-transparent p-5 pt-12 text-xs text-mist"
+        >
+          {t.method.imageCaption}
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- Steps -->
+    <ol class="mt-4 grid gap-4 md:grid-cols-3">
+      {
+        t.method.steps.map((step, i) => (
+          <li
+            class="spotlight panel group p-7 lg:p-8"
+            data-reveal
+            style={`--reveal-delay:${i * 100}ms`}
+          >
+            <div class="flex items-center gap-3">
+              <span class="font-mono text-xs tracking-widest text-flux-400">{step.num}</span>
+              <span class="h-px flex-1 bg-line transition-colors duration-500 group-hover:bg-flux-500/50" />
+            </div>
+            <h3 class="mt-5 text-h3 font-medium">{step.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-mist">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-8 max-w-[70ch] text-sm text-mute" data-reveal>{t.method.note}</p>
+  </div>
+</section>

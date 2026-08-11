@@ -1,0 +1,48 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const items = [...t.strip.items];
+---
+
+<section class="relative border-y border-line bg-ink py-5" aria-label={t.strip.label}>
+  <div class="flex items-center gap-8 overflow-hidden">
+    <span
+      class="ml-[max(1.25rem,calc((100vw-84rem)/2+3.5rem))] hidden shrink-0 font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase md:block"
+    >
+      {t.strip.label}
+    </span>
+    <div
+      class="relative min-w-0 flex-1 [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)]"
+    >
+      <div class="flex w-max items-center gap-10 pr-10" data-marquee>
+        {
+          [...items, ...items].map((item) => (
+            <span class="flex shrink-0 items-center gap-10 text-sm text-mist whitespace-nowrap">
+              {item}
+              <span class="h-1 w-1 rounded-full bg-flux-500/70" aria-hidden="true" />
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  [data-marquee] {
+    animation: marquee 42s linear infinite;
+  }
+  section:hover [data-marquee] {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-marquee] {
+      animation: none;
+    }
+  }
+</style>

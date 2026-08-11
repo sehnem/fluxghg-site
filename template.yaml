@@ -57,8 +57,13 @@ Resources:
         ViewerCertificate:
           AcmCertificateArn: !Ref Certificate
           SslSupportMethod: sni-only
+        # new.fluxghg.com is served by the separate `fluxghg-site-v2` stack
+        # (see v2/template.yaml) while the new site is being validated.
+        # DomainName is still used for the bucket name and the certificate,
+        # so it must not be changed here.
         Aliases:
-          - !Ref DomainName
+          - !Ref RootDomainName
+          - !Sub 'www.${RootDomainName}'
         DefaultCacheBehavior:
           AllowedMethods:
             - GET
@@ -97,11 +102,23 @@ Resources:
               QueryString: false
             ViewerProtocolPolicy: redirect-to-https
 
-  DomainRecord:
+  # The A record for new.fluxghg.com now belongs to the fluxghg-site-v2 stack.
+
+  RootDomainRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref HostedZoneId
-      Name: !Ref DomainName
+      Name: !Ref RootDomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt CloudFrontDistribution.DomainName
+
+  WwwDomainRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub 'www.${RootDomainName}'
       Type: A
       AliasTarget:
         HostedZoneId: Z2FDTNDATAQYW2
@@ -112,12 +129,15 @@ Resources:
     Properties:
       DomainName: !Ref DomainName
       SubjectAlternativeNames:
-        - !Sub '*.${RootDomainName}'
+        - !Ref RootDomainName
+        - !Sub 'www.${RootDomainName}'
       ValidationMethod: DNS
       DomainValidationOptions:
         - DomainName: !Ref DomainName
           HostedZoneId: !Ref HostedZoneId
-        - DomainName: !Sub '*.${RootDomainName}'
+        - DomainName: !Ref RootDomainName
+          HostedZoneId: !Ref HostedZoneId
+        - DomainName: !Sub 'www.${RootDomainName}'
           HostedZoneId: !Ref HostedZoneId
 
   ContactFormFunction:

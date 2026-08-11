@@ -1,0 +1,99 @@
+---
+import LangSwitch from './LangSwitch.astro';
+import { localePath, useTranslations, site, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const links = [
+  { href: '#method', label: t.nav.method },
+  { href: '#services', label: t.nav.services },
+  { href: '#about', label: t.nav.about },
+  { href: '#team', label: t.nav.team },
+  { href: '#contact', label: t.nav.contact },
+];
+---
+
+<footer class="relative overflow-hidden border-t border-line bg-void pt-20 pb-10">
+  <div class="container-page">
+    <div class="grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <a href={localePath(lang)} class="inline-block transition-opacity hover:opacity-70">
+          <img
+            src="/assets/logo/horizontal_tagline_white.svg"
+            alt="fluxGHG"
+            width="220"
+            height="86"
+            class="h-14 w-auto"
+            loading="lazy"
+          />
+        </a>
+        <p class="mt-6 max-w-[42ch] text-sm leading-relaxed text-mist">{t.footer.punchline}</p>
+      </div>
+
+      <nav class="md:col-span-3 md:col-start-7" aria-label={t.footer.navTitle}>
+        <h2 class="font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+          {t.footer.navTitle}
+        </h2>
+        <ul class="mt-5 space-y-3">
+          {
+            links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-mist transition-colors hover:text-flux-300"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="md:col-span-3">
+        <h2 class="font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+          {t.footer.contactTitle}
+        </h2>
+        <ul class="mt-5 space-y-3 text-sm text-mist">
+          <li>
+            <a
+              href={`mailto:${site.email}`}
+              class="decoration-flux-500 underline-offset-4 transition-colors hover:text-flux-300 hover:underline"
+            >
+              {site.email}
+            </a>
+          </li>
+          <li>{t.contact.location}</li>
+        </ul>
+
+        <h2 class="mt-8 font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+          {t.footer.langTitle}
+        </h2>
+        <LangSwitch lang={lang} class="mt-4 w-max" />
+      </div>
+    </div>
+
+    <!-- Oversized wordmark rule -->
+    <div class="relative mt-16 border-t border-line pt-6">
+      <div class="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p class="font-mono text-[0.6875rem] text-mute">
+          © {year} fluxGHG. {t.footer.rights}
+        </p>
+        <p class="font-mono text-[0.6875rem] tracking-[0.16em] text-mute uppercase">
+          {t.contact.location}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="pointer-events-none absolute inset-x-0 -bottom-6 h-24 bg-[radial-gradient(60%_100%_at_50%_100%,color-mix(in_oklab,var(--color-flux-700)_28%,transparent),transparent)]"
+    aria-hidden="true"
+  >
+  </div>
+</footer>

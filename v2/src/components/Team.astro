@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import alecsander from '../assets/img/alecsander.png';
+import josue from '../assets/img/josue.png';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const photos = [alecsander, josue];
+---
+
+<section id="team" class="relative border-t border-line py-24 md:py-36">
+  <div class="container-page">
+    <div class="max-w-2xl">
+      <p class="eyebrow" data-reveal>
+        <span class="h-px w-8 bg-flux-500"></span>
+        {t.team.eyebrow}
+      </p>
+      <h2 class="mt-6 text-h2 font-semibold" data-reveal style="--reveal-delay:80ms">
+        {t.team.title}
+      </h2>
+    </div>
+
+    <div class="mt-14 grid gap-4 md:grid-cols-2">
+      {
+        t.team.members.map((member, i) => (
+          <article
+            class="spotlight panel group overflow-hidden"
+            data-reveal
+            style={`--reveal-delay:${i * 110}ms`}
+          >
+            <div class="relative h-64 overflow-hidden sm:h-72">
+              <div
+                class="absolute inset-x-0 bottom-0 h-56 bg-[radial-gradient(60%_100%_at_50%_100%,color-mix(in_oklab,var(--color-flux-600)_38%,transparent),transparent_72%)]"
+                aria-hidden="true"
+              />
+              <div class="grid-lines absolute inset-0 opacity-30 [background-size:2.5rem_2.5rem]" />
+              <Image
+                src={photos[i]!}
+                alt={member.name}
+                widths={[360, 560]}
+                sizes="(min-width: 768px) 24rem, 60vw"
+                loading="lazy"
+                class="absolute bottom-0 left-1/2 h-[115%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
+              />
+              <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-shell to-transparent" />
+            </div>
+
+            <div class="relative -mt-6 p-7 lg:p-9">
+              <h3 class="text-2xl font-medium tracking-tight">{member.name}</h3>
+              <p class="mt-2 font-mono text-[0.6875rem] tracking-[0.16em] text-flux-400 uppercase">
+                {member.role}
+              </p>
+              <p class="mt-5 text-sm leading-relaxed text-mist">{member.body}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

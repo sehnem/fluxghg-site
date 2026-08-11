@@ -1,0 +1,29 @@
+---
+import Hero from './Hero.astro';
+import Strip from './Strip.astro';
+import Measure from './Measure.astro';
+import Method from './Method.astro';
+import Services from './Services.astro';
+import Water from './Water.astro';
+import Modeling from './Modeling.astro';
+import About from './About.astro';
+import Team from './Team.astro';
+import Contact from './Contact.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<Hero lang={lang} />
+<Strip lang={lang} />
+<Measure lang={lang} />
+<Method lang={lang} />
+<Services lang={lang} />
+<Water lang={lang} />
+<Modeling lang={lang} />
+<About lang={lang} />
+<Team lang={lang} />
+<Contact lang={lang} />

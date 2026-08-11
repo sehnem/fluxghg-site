@@ -1,0 +1,403 @@
+---
+/**
+ * How the extrapolation works: three data streams feed a network trained
+ * against measured flux, which then paints carbon balance over a grid.
+ *
+ * The animation is meant to read as inference, not decoration: a pulse
+ * crosses the network left to right, and each time it arrives the map
+ * settles into a new state. One slow cycle, so it never feels busy.
+ */
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const inputs = t.modeling.inputs;
+
+// Layout
+const IN_X = 22;
+const IN_W = 240;
+const IN_H = 60;
+const IN_GAP = 26;
+const IN_Y = (i: number) => 44 + i * (IN_H + IN_GAP);
+const NET_X = 366;
+const NET_CY = 176;
+const OUT_X = 512;
+const OUT_Y = 74;
+const OUT_SIZE = 196;
+
+// Neural net: 3 layers of nodes
+const layers = [
+  { x: NET_X, n: 4 },
+  { x: NET_X + 46, n: 5 },
+  { x: NET_X + 92, n: 3 },
+];
+const nodeY = (n: number, i: number, spread = 90) =>
+  NET_CY - spread / 2 + (spread / (n - 1)) * i;
+
+/**
+ * Three states of the same landscape — the same spatial pattern shifted in
+ * phase, so the map changes the way a season would rather than flickering.
+ */
+const CELL = OUT_SIZE / 6;
+const field = (phase: number) =>
+  Array.from({ length: 36 }, (_, i) => {
+    const col = i % 6;
+    const row = Math.floor(i / 6);
+    const v = Math.sin(col * 0.9 + row * 0.55 + phase) * 0.5 + Math.cos(row * 1.1 + phase) * 0.35;
+    return { col, row, v };
+  });
+const fields = [field(0), field(2.1), field(4.2)];
+
+const cellColor = (v: number) =>
+  v > 0.28 ? '#9bd489' : v > -0.05 ? '#3fc3de' : v > -0.45 ? '#1e80a6' : '#185a8a';
+---
+
+<svg
+  viewBox="0 0 720 372"
+  class="h-auto w-full min-w-[34rem]"
+  role="img"
+  aria-label={`${t.modeling.inputsLabel} → ${t.modeling.modelLabel} → ${t.modeling.outputLabel}`}
+  data-model-diagram
+>
+  <defs>
+    <marker
+      id="flowArrow"
+      viewBox="0 0 10 10"
+      refX="8"
+      refY="5"
+      markerWidth="5"
+      markerHeight="5"
+      orient="auto"
+    >
+      <path d="M0 0 L10 5 L0 10 z" fill="#3fc3de" fill-opacity="0.75"></path>
+    </marker>
+    <linearGradient id="nee" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#185a8a"></stop>
+      <stop offset="45%" stop-color="#3fc3de"></stop>
+      <stop offset="100%" stop-color="#9bd489"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- column labels -->
+  <text
+    x={IN_X}
+    y="24"
+    fill="#6f858f"
+    font-family="ui-monospace, monospace"
+    font-size="11"
+    letter-spacing="1.6">{t.modeling.inputsLabel.toUpperCase()}</text
+  >
+  <text
+    x={NET_X}
+    y="24"
+    fill="#6f858f"
+    font-family="ui-monospace, monospace"
+    font-size="11"
+    letter-spacing="1.6">{t.modeling.modelLabel.toUpperCase()}</text
+  >
+  <text
+    x={OUT_X}
+    y="24"
+    fill="#6f858f"
+    font-family="ui-monospace, monospace"
+    font-size="11"
+    letter-spacing="1.6">{t.modeling.outputLabel.toUpperCase()}</text
+  >
+
+  <!-- input cards -->
+  {
+    inputs.map((input, i) => (
+      <g>
+        <rect
+          x={IN_X}
+          y={IN_Y(i)}
+          width={IN_W}
+          height={IN_H}
+          rx="10"
+          fill="#0e1922"
+          stroke="#a4b8bf"
+          stroke-opacity="0.22"
+        />
+        <text
+          x={IN_X + 16}
+          y={IN_Y(i) + 23}
+          fill={i === 0 ? '#9bd489' : '#3fc3de'}
+          font-family="ui-monospace, monospace"
+          font-size="9.5"
+          letter-spacing="1.4"
+        >
+          {input.tag.toUpperCase()}
+        </text>
+        <text x={IN_X + 16} y={IN_Y(i) + 40} fill="#e8f0f4" font-size="13.5" font-weight="500">
+          {input.title}
+        </text>
+        <text x={IN_X + 16} y={IN_Y(i) + 54} fill="#6f858f" font-size="10">
+          {input.detail}
+        </text>
+
+        {/* feed line into the first layer */}
+        <path
+          d={`M ${IN_X + IN_W + 6} ${IN_Y(i) + IN_H / 2}
+              C ${IN_X + IN_W + 70} ${IN_Y(i) + IN_H / 2},
+                ${NET_X - 60} ${NET_CY},
+                ${NET_X - 12} ${NET_CY}`}
+          fill="none"
+          stroke={i === 0 ? '#9bd489' : '#3fc3de'}
+          stroke-opacity="0.4"
+          stroke-width="1.4"
+          stroke-dasharray="4 6"
+          class="flow"
+          style={`--delay:${i * 0.5}s`}
+          marker-end="url(#flowArrow)"
+        />
+      </g>
+    ))
+  }
+
+  <!-- neural network: the pulse crosses one layer at a time -->
+  <g>
+    {
+      layers.slice(0, -1).map((layer, li) =>
+        Array.from({ length: layer.n }, (_, i) =>
+          Array.from({ length: layers[li + 1]!.n }, (_, j) => (
+            <line
+              x1={layer.x}
+              y1={nodeY(layer.n, i)}
+              x2={layers[li + 1]!.x}
+              y2={nodeY(layers[li + 1]!.n, j)}
+              stroke="#3fc3de"
+              stroke-width="0.8"
+              class="synapse"
+              style={`--layer:${li}`}
+            />
+          ))
+        )
+      )
+    }
+    {
+      layers.map((layer, li) =>
+        Array.from({ length: layer.n }, (_, i) => (
+          <circle
+            cx={layer.x}
+            cy={nodeY(layer.n, i)}
+            r="4.5"
+            fill={li === layers.length - 1 ? '#3fc3de' : '#13212c'}
+            stroke="#3fc3de"
+            stroke-width="1.3"
+            class="node"
+            style={`--layer:${li}`}
+          />
+        ))
+      )
+    }
+  </g>
+
+  <!-- network → map -->
+  <path
+    d={`M ${NET_X + 104} ${NET_CY} C ${NET_X + 140} ${NET_CY}, ${OUT_X - 40} ${OUT_Y + OUT_SIZE / 2}, ${OUT_X - 8} ${OUT_Y + OUT_SIZE / 2}`}
+    fill="none"
+    stroke="#3fc3de"
+    stroke-opacity="0.45"
+    stroke-width="1.4"
+    stroke-dasharray="4 6"
+    class="flow"
+    style="--delay:0.9s"
+    marker-end="url(#flowArrow)"></path>
+
+  <!-- output: gridded carbon balance, cycling between states -->
+  <g transform={`translate(${OUT_X} ${OUT_Y})`}>
+    {
+      fields.map((cells, fi) => (
+        <g class="field" style={`--state:${fi}`}>
+          {cells.map((c, i) => (
+            <rect
+              x={c.col * CELL}
+              y={c.row * CELL}
+              width={CELL - 2}
+              height={CELL - 2}
+              rx="2"
+              fill={cellColor(c.v)}
+              fill-opacity={0.22 + Math.abs(c.v) * 0.55}
+              class="cell"
+              style={`--delay:${i * 0.02}s`}
+            />
+          ))}
+        </g>
+      ))
+    }
+
+    <rect
+      x="-6"
+      y="-6"
+      width={OUT_SIZE + 6}
+      height={OUT_SIZE + 6}
+      rx="10"
+      fill="none"
+      stroke="#a4b8bf"
+      stroke-opacity="0.22"></rect>
+
+    <!-- the anchoring tower sits inside the mapped area -->
+    <g transform={`translate(${OUT_SIZE * 0.33} ${OUT_SIZE * 0.62})`}>
+      <line x1="0" y1="0" x2="0" y2="-22" stroke="#e8f0f4" stroke-width="1.8"></line>
+      <path d="M -6 -22 L -6 -29 L 6 -29 L 6 -22" fill="none" stroke="#e8f0f4" stroke-width="1.5"
+      ></path>
+      <circle cx="0" cy="-22" r="3" fill="#9bd489"></circle>
+    </g>
+  </g>
+
+  <!-- scale legend under the map -->
+  <g transform={`translate(${OUT_X} ${OUT_Y + OUT_SIZE + 26})`}>
+    <text
+      x="0"
+      y="0"
+      fill="#6f858f"
+      font-family="ui-monospace, monospace"
+      font-size="10"
+      letter-spacing="1.2">− CO₂</text
+    >
+    <text
+      x={OUT_SIZE - 34}
+      y="0"
+      fill="#6f858f"
+      font-family="ui-monospace, monospace"
+      font-size="10"
+      letter-spacing="1.2">+ CO₂</text
+    >
+    <rect x="44" y="-9" width={OUT_SIZE - 86} height="6" rx="3" fill="url(#nee)"></rect>
+  </g>
+</svg>
+
+<style>
+  /* Everything below only runs once `is-live` is set by main.ts, when the
+     diagram scrolls into view. The static defaults keep it legible if the
+     script never runs. */
+
+  [data-model-diagram].is-live .flow {
+    animation: flow-dash 1.6s linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes flow-dash {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+
+  /* One pulse every 5s, reaching each layer 0.3s after the previous, so the
+     network reads as computing rather than blinking at random. */
+  .node {
+    opacity: 0.5;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .synapse {
+    stroke-opacity: 0.14;
+  }
+
+  [data-model-diagram].is-live .node {
+    animation: node-fire 5s ease-in-out infinite;
+    animation-delay: calc(var(--layer) * 0.3s);
+  }
+  @keyframes node-fire {
+    0%,
+    100% {
+      opacity: 0.5;
+      scale: 1;
+    }
+    5% {
+      opacity: 1;
+      scale: 1.3;
+    }
+    22% {
+      opacity: 0.5;
+      scale: 1;
+    }
+  }
+
+  [data-model-diagram].is-live .synapse {
+    animation: synapse-fire 5s ease-in-out infinite;
+    animation-delay: calc(var(--layer) * 0.3s + 0.08s);
+  }
+  @keyframes synapse-fire {
+    0%,
+    100% {
+      stroke-opacity: 0.14;
+    }
+    7% {
+      stroke-opacity: 0.55;
+    }
+    26% {
+      stroke-opacity: 0.14;
+    }
+  }
+
+  /* The map settles into a new state as each pulse arrives: three states,
+     5s each, crossfading. */
+  .field {
+    opacity: 0;
+  }
+  .field[style*='--state:0'] {
+    opacity: 1;
+  }
+  /* The −3s shift puts the crossfade at ~1.2s into each 5s cycle — the moment
+     the pulse reaches the output layer — instead of drifting to the end of it. */
+  [data-model-diagram].is-live .field {
+    animation: field-cycle 15s ease-in-out infinite;
+    animation-delay: calc(var(--state) * -5s - 3s);
+  }
+  @keyframes field-cycle {
+    0%,
+    28% {
+      opacity: 1;
+    }
+    35%,
+    93% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Cells build in once, on entry. */
+  .cell {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  :global(html.js) .cell {
+    opacity: 0;
+  }
+  [data-model-diagram].is-live .cell {
+    animation: cell-in 0.55s var(--ease-out-quart) forwards;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes cell-in {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-model-diagram].is-live .flow,
+    [data-model-diagram].is-live .node,
+    [data-model-diagram].is-live .synapse,
+    [data-model-diagram].is-live .field,
+    [data-model-diagram].is-live .cell {
+      animation: none;
+    }
+    :global(html.js) .cell {
+      opacity: 1;
+    }
+    .node {
+      opacity: 0.85;
+    }
+  }
+</style>

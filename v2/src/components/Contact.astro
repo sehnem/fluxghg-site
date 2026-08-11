@@ -1,0 +1,171 @@
+---
+import { useTranslations, site, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const strings = JSON.stringify({
+  send: t.contact.form.send,
+  sending: t.contact.form.sending,
+  success: t.contact.form.success,
+  errorFields: t.contact.form.errorFields,
+  errorEmail: t.contact.form.errorEmail,
+  errorSend: t.contact.form.errorSend,
+});
+
+const details = [
+  { label: t.contact.emailLabel, value: site.email, href: `mailto:${site.email}` },
+  { label: t.contact.locationLabel, value: t.contact.location },
+];
+
+const inputClass =
+  'w-full rounded-xl border border-line bg-void/60 px-4 py-3.5 text-fog placeholder:text-mute/70 transition-colors duration-300 outline-none hover:border-line-strong focus:border-flux-400 focus:bg-void';
+const labelClass =
+  'mb-2 block font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase';
+---
+
+<section id="contact" class="relative overflow-hidden border-t border-line bg-ink py-24 md:py-36">
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_80%_0%,color-mix(in_oklab,var(--color-flux-700)_20%,transparent),transparent)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page relative">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <!-- Left: pitch + details -->
+      <div class="lg:col-span-5">
+        <p class="eyebrow" data-reveal>
+          <span class="h-px w-8 bg-leaf-500"></span>
+          {t.contact.eyebrow}
+        </p>
+        <h2 class="mt-6 text-h2 font-semibold" data-reveal style="--reveal-delay:80ms">
+          {t.contact.title}
+        </h2>
+        <p class="mt-7 max-w-[46ch] text-lead text-mist" data-reveal style="--reveal-delay:140ms">
+          {t.contact.lead}
+        </p>
+
+        <dl class="mt-12 space-y-px overflow-hidden rounded-2xl border border-line">
+          {
+            details.map((d, i) => (
+              <div class="bg-shell p-5" data-reveal style={`--reveal-delay:${180 + i * 70}ms`}>
+                <dt class="font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+                  {d.label}
+                </dt>
+                <dd class="mt-1.5 text-fog">
+                  {d.href ? (
+                    <a
+                      href={d.href}
+                      class="decoration-flux-500 underline-offset-4 transition-colors hover:text-flux-300 hover:underline"
+                    >
+                      {d.value}
+                    </a>
+                  ) : (
+                    d.value
+                  )}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <!-- Right: form -->
+      <div class="lg:col-span-6 lg:col-start-7">
+        <form
+          id="contact-form"
+          class="panel p-6 sm:p-9"
+          novalidate
+          data-strings={strings}
+          data-reveal
+          style="--reveal-delay:120ms"
+        >
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class={labelClass} for="name">{t.contact.form.name}</label>
+              <input
+                class={inputClass}
+                type="text"
+                id="name"
+                name="name"
+                autocomplete="name"
+                required
+              />
+            </div>
+            <div>
+              <label class={labelClass} for="email">{t.contact.form.email}</label>
+              <input
+                class={inputClass}
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <label class={labelClass} for="org">
+              {t.contact.form.org}
+              <span class="ml-1 normal-case opacity-60">({t.contact.form.orgOptional})</span>
+            </label>
+            <input
+              class={inputClass}
+              type="text"
+              id="org"
+              name="org"
+              autocomplete="organization"
+            />
+          </div>
+
+          <div class="mt-5">
+            <label class={labelClass} for="message">{t.contact.form.message}</label>
+            <textarea
+              class={inputClass + ' min-h-40 resize-y'}
+              id="message"
+              name="message"
+              rows="5"
+              placeholder={t.contact.form.messagePlaceholder}
+              required></textarea>
+          </div>
+
+          <!-- honeypot -->
+          <div class="absolute -left-[9999px]" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="mt-7 flex flex-wrap items-center gap-4">
+            <button
+              type="submit"
+              id="form-submit"
+              class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-fog px-7 py-4 text-sm font-semibold text-ink transition-transform duration-300 hover:scale-[1.03] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            >
+              <span class="relative z-10" id="form-submit-label">{t.contact.form.send}</span>
+              <span
+                class="relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-data-[loading]:animate-pulse"
+                aria-hidden="true">→</span
+              >
+              <span
+                class="absolute inset-0 z-0 translate-y-full bg-gradient-to-r from-flux-400 to-leaf-400 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0 group-disabled:translate-y-full"
+              ></span>
+            </button>
+
+            <p
+              id="form-status"
+              role="status"
+              aria-live="polite"
+              class="hidden text-sm data-[kind=error]:text-red-300 data-[kind=success]:text-leaf-400"
+            >
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

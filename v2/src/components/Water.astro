@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import irrigationImg from '../assets/img/irrigation.jpg';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="water" class="relative border-y border-line bg-ink py-24 md:py-36">
+  <div class="container-page">
+    <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+      <figure
+        class="relative order-2 overflow-hidden rounded-[1.5rem] border border-line lg:order-1 lg:col-span-6"
+        data-reveal
+      >
+        <Image
+          src={irrigationImg}
+          alt={t.water.caption}
+          widths={[640, 1000, 1400]}
+          sizes="(min-width: 1024px) 48vw, 100vw"
+          loading="lazy"
+          class="aspect-[16/11] w-full object-cover [filter:saturate(0.8)]"
+        />
+        <div
+          class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/85 via-transparent to-transparent"
+        >
+        </div>
+
+        <!-- water-balance readout overlay -->
+        <div class="absolute inset-x-0 bottom-0 p-5 sm:p-7">
+          <div class="flex flex-wrap items-end gap-x-10 gap-y-4">
+            {
+              t.water.metrics.map((m) => (
+                <div>
+                  <p class="font-mono text-lg text-flux-300 sm:text-xl">{m.value}</p>
+                  <p class="mt-1 font-mono text-[0.625rem] tracking-[0.14em] text-mist uppercase">
+                    {m.label}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </figure>
+
+      <div class="order-1 lg:order-2 lg:col-span-5 lg:col-start-8">
+        <p class="eyebrow" data-reveal>
+          <span class="h-px w-8 bg-leaf-500"></span>
+          {t.water.eyebrow}
+        </p>
+        <h2 class="mt-6 text-h2 font-semibold" data-reveal style="--reveal-delay:80ms">
+          {t.water.title}
+        </h2>
+        <p class="mt-7 text-lead text-mist" data-reveal style="--reveal-delay:140ms">
+          {t.water.body1}
+        </p>
+        <p class="mt-5 text-mist/85" data-reveal style="--reveal-delay:200ms">
+          {t.water.body2}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

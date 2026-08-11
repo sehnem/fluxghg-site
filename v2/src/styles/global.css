@@ -1,0 +1,312 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ * Fonts — Work Sans (brand typeface), subset to latin + latin-ext
+ * ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/assets/fonts/worksans-var.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ *
+ * Design tokens
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces — near-black with a blue cast, so brand cyan reads as light */
+  --color-void: #04070a;
+  --color-ink: #070c11;
+  --color-shell: #0a1119;
+  --color-panel: #0e1922;
+  --color-raised: #13212c;
+
+  /* Brand — from the fluxGHG palette */
+  --color-flux-300: #6fd8ee;
+  --color-flux-400: #3fc3de;
+  --color-flux-500: #239fbc;
+  --color-flux-600: #1e80a6;
+  --color-flux-700: #185a8a;
+  --color-flux-900: #0b2f47;
+
+  --color-leaf-300: #a8dd97;
+  --color-leaf-400: #9bd489;
+  --color-leaf-500: #7eb56f;
+  --color-leaf-700: #4b7a41;
+
+  /* Text */
+  --color-fog: #e8f0f4;
+  --color-mist: #a4b8bf;
+  --color-mute: #6f858f;
+
+  --color-line: color-mix(in oklab, #a4b8bf 14%, transparent);
+  --color-line-strong: color-mix(in oklab, #a4b8bf 26%, transparent);
+
+  /* Type */
+  --font-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Fira Code', Menlo, monospace;
+
+  /* Fluid display scale */
+  --text-display: clamp(2.5rem, 1.15rem + 5.1vw, 5.25rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.035em;
+  --text-h2: clamp(1.9rem, 1.05rem + 3vw, 3.6rem);
+  --text-h2--line-height: 1.04;
+  --text-h2--letter-spacing: -0.028em;
+  --text-h3: clamp(1.15rem, 0.95rem + 0.7vw, 1.5rem);
+  --text-h3--line-height: 1.22;
+  --text-h3--letter-spacing: -0.015em;
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.42vw, 1.3rem);
+  --text-lead--line-height: 1.55;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --radius-card: 1.25rem;
+
+  --breakpoint-xs: 30rem;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-fog);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-flux-500);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-flux-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Firefox / fallback scrollbar polish */
+  html {
+    scrollbar-color: var(--color-raised) var(--color-void);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Components / utilities
+ * ------------------------------------------------------------------ */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 84rem;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 3.5rem;
+  }
+}
+
+/* Small monospaced section label, e.g. "02 / METHOD" */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-flux-400);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Hairline grid backdrop */
+@utility grid-lines {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 5.5rem 5.5rem;
+}
+
+@utility text-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-fog) 10%,
+    var(--color-flux-300) 55%,
+    var(--color-leaf-400) 95%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass panel used for cards */
+@utility panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--color-panel) 92%, transparent), var(--color-shell));
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(12px);
+}
+
+/* Cursor-tracking spotlight on cards (driven by --mx/--my set in JS) */
+@utility spotlight {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      18rem 18rem at var(--mx, 50%) var(--my, 0%),
+      color-mix(in oklab, var(--color-flux-400) 55%, transparent),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-quart);
+    z-index: 2;
+    pointer-events: none;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      22rem 22rem at var(--mx, 50%) var(--my, 0%),
+      color-mix(in oklab, var(--color-flux-500) 13%, transparent),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out-quart);
+    z-index: -1;
+    pointer-events: none;
+  }
+  &:hover::before,
+  &:hover::after,
+  &:focus-within::before,
+  &:focus-within::after {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Scroll reveal — data-reveal is progressively enhanced by main.ts.
+ * Without JS everything stays visible.
+ * ------------------------------------------------------------------ */
+@layer utilities {
+  [data-reveal] {
+    opacity: 1;
+  }
+
+  html.js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 1.75rem), 0);
+    transition:
+      opacity 0.85s var(--ease-out-expo),
+      transform 0.95s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  html.js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Line mask reveal for headlines. The padding gives descenders (g, q, ç)
+     room inside the clipping box; the negative margin keeps the tight
+     display line-height intact. */
+  .mask-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    html.js [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Marquee for the credential strip */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes trace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

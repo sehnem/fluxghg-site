@@ -1,0 +1,153 @@
+---
+import { Image } from 'astro:assets';
+import heroImg from '../assets/img/field-tower.jpg';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="home" class="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
+  <!-- Layer 1: photograph, pushed far back tonally -->
+  <div class="absolute inset-0 -z-30">
+    <Image
+      src={heroImg}
+      alt={t.meta.ogAlt}
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="h-full w-full object-cover object-[50%_62%] opacity-[0.5] [filter:saturate(0.62)_contrast(1.06)]"
+    />
+    <div
+      class="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_10%,transparent_10%,var(--color-void)_78%)]"
+    >
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-void/90 via-void/25 to-void"></div>
+    <div class="absolute inset-0 bg-flux-900/25 mix-blend-color"></div>
+  </div>
+
+  <!-- Layer 2: turbulence field -->
+  <canvas
+    id="flux-field"
+    class="absolute inset-0 -z-20 h-full w-full opacity-90"
+    aria-hidden="true"
+    data-flux-field></canvas>
+
+  <!-- Layer 3: measurement grid -->
+  <div
+    class="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(85%_70%_at_50%_45%,#000,transparent)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page relative flex flex-1 flex-col justify-center pt-28 pb-10 md:pt-32">
+    <h1 class="max-w-[19ch] text-display font-semibold">
+      <span class="mask-line"
+        ><span class="block" data-hero-line style="--i:0">{t.hero.titleA}</span></span
+      >
+      <span class="mask-line"
+        ><span class="block text-gradient" data-hero-line style="--i:1">{t.hero.titleB}</span></span
+      >
+      <span class="mask-line"
+        ><span class="block text-mist" data-hero-line style="--i:2">{t.hero.titleC}</span></span
+      >
+    </h1>
+
+    <p
+      class="mt-8 max-w-[58ch] text-lead text-mist"
+      data-reveal
+      style="--reveal-delay:520ms"
+      set:html={t.hero.lead}
+    />
+
+    <div
+      class="mt-10 flex flex-wrap items-center gap-3"
+      data-reveal
+      style="--reveal-delay:620ms"
+    >
+      <a
+        href="#contact"
+        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-fog px-7 py-4 text-sm font-semibold text-ink transition-transform duration-300 hover:scale-[1.03]"
+      >
+        <span class="relative z-10">{t.hero.ctaPrimary}</span>
+        <span
+          class="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span
+        >
+        <span
+          class="absolute inset-0 z-0 translate-y-full bg-gradient-to-r from-flux-400 to-leaf-400 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+        ></span>
+      </a>
+      <a
+        href="#method"
+        class="inline-flex items-center gap-3 rounded-full border border-line-strong px-7 py-4 text-sm font-medium text-fog transition-colors duration-300 hover:border-flux-400 hover:text-flux-300"
+      >
+        {t.hero.ctaSecondary}
+      </a>
+    </div>
+  </div>
+
+  <!-- Live signal + stat rail -->
+  <div class="relative border-t border-line" data-reveal style="--reveal-delay:760ms">
+    <div class="container-page">
+      <div class="flex flex-col items-stretch gap-1.5 border-b border-line py-3 sm:flex-row sm:items-center sm:gap-4">
+        <span class="font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+          {t.hero.liveLabel}
+        </span>
+        <canvas
+          class="h-8 w-full min-w-0 flex-1 opacity-80"
+          aria-hidden="true"
+          data-flux-trace
+          height="32"></canvas>
+      </div>
+
+      <dl class="grid grid-cols-2 divide-line md:grid-cols-4 md:divide-x">
+        {
+          t.hero.stats.map((s, i) => (
+            <div
+              class:list={[
+                'group py-5 md:px-6',
+                i === 0 && 'md:pl-0',
+                i % 2 === 1 && 'border-l border-line pl-5 md:border-l-0 md:pl-6',
+                i < 2 && 'border-b border-line md:border-b-0',
+              ]}
+            >
+              <dt class="font-mono text-[0.625rem] tracking-[0.16em] text-mute uppercase">
+                {s.label}
+              </dt>
+              <dd class="mt-1.5 text-xl font-medium tracking-tight text-fog md:text-2xl">
+                {s.value}
+              </dd>
+              <p class="mt-1 text-xs text-mute">{s.note}</p>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  [data-hero-line] {
+    animation: line-in 1.1s var(--ease-out-expo) both;
+    animation-delay: calc(var(--i) * 110ms + 150ms);
+  }
+  @keyframes line-in {
+    from {
+      transform: translateY(105%);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-line] {
+      animation: none;
+    }
+  }
+</style>

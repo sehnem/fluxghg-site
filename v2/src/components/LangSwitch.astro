@@ -1,0 +1,36 @@
+---
+import { languages, localePath, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+const { lang, class: className = '' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div
+  class:list={[
+    'flex items-center rounded-full border border-line p-0.5 font-mono text-xs',
+    className,
+  ]}
+  role="group"
+  aria-label={t.nav.language}
+>
+  {
+    (Object.keys(languages) as Lang[]).map((code) => (
+      <a
+        href={localePath(code)}
+        hreflang={code === 'pt' ? 'pt-BR' : 'en'}
+        data-lang-link={code}
+        aria-current={code === lang ? 'true' : undefined}
+        class:list={[
+          'rounded-full px-2.5 py-1.5 tracking-widest transition-colors duration-300',
+          code === lang ? 'bg-fog text-ink' : 'text-mute hover:text-fog',
+        ]}
+      >
+        {languages[code]}
+      </a>
+    ))
+  }
+</div>

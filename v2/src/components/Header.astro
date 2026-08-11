@@ -1,0 +1,156 @@
+---
+import LangSwitch from './LangSwitch.astro';
+import { localePath, useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = localePath(lang);
+
+const links = [
+  { href: '#method', label: t.nav.method },
+  { href: '#services', label: t.nav.services },
+  { href: '#about', label: t.nav.about },
+  { href: '#team', label: t.nav.team },
+];
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500"
+  data-header
+>
+  <div
+    class="pointer-events-none absolute inset-0 border-b border-transparent opacity-0 transition-opacity duration-500 [background:color-mix(in_oklab,var(--color-void)_72%,transparent)] [backdrop-filter:blur(16px)_saturate(140%)]"
+    data-header-bg
+  >
+  </div>
+
+  <div class="container-page relative flex h-20 items-center justify-between gap-6 md:h-24">
+    <a
+      href={home}
+      class="relative z-10 shrink-0 transition-opacity hover:opacity-70"
+      aria-label="fluxGHG"
+    >
+      <img
+        src="/assets/logo/horizontal_white.svg"
+        alt="fluxGHG"
+        width="150"
+        height="46"
+        class="h-7 w-auto md:h-8"
+      />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-full px-4 py-2 text-sm font-medium text-mist transition-colors duration-300 hover:bg-white/5 hover:text-fog"
+            data-nav-link
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2 md:gap-3">
+      <LangSwitch lang={lang} />
+
+      <a
+        href="#contact"
+        class="group relative hidden overflow-hidden rounded-full bg-fog px-5 py-2.5 text-sm font-semibold text-ink transition-transform duration-300 hover:scale-[1.03] sm:inline-flex"
+      >
+        <span class="relative z-10">{t.nav.cta}</span>
+        <span
+          class="absolute inset-0 z-0 translate-y-full bg-gradient-to-r from-flux-400 to-leaf-400 transition-transform duration-400 ease-[var(--ease-out-expo)] group-hover:translate-y-0"
+        ></span>
+      </a>
+
+      <button
+        type="button"
+        class="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-line text-fog transition-colors hover:bg-white/5 lg:hidden"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={t.nav.menu}
+      >
+        <span class="flex w-4 flex-col gap-[5px]">
+          <span
+            class="block h-px w-full bg-current transition-transform duration-300 ease-[var(--ease-out-expo)] [[aria-expanded='true']_&]:translate-y-[3px] [[aria-expanded='true']_&]:rotate-45"
+          ></span>
+          <span
+            class="block h-px w-full bg-current transition-transform duration-300 ease-[var(--ease-out-expo)] [[aria-expanded='true']_&]:-translate-y-[3px] [[aria-expanded='true']_&]:-rotate-45"
+          ></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 hidden flex-col bg-void/95 [backdrop-filter:blur(20px)] lg:hidden"
+  data-mobile-menu
+>
+  <div class="grid-lines pointer-events-none absolute inset-0 opacity-40"></div>
+  <nav
+    class="container-page relative flex flex-1 flex-col justify-center gap-1 pt-20"
+    aria-label="Mobile"
+  >
+    {
+      [...links, { href: '#contact', label: t.nav.contact }].map((link, i) => (
+        <a
+          href={link.href}
+          class="group flex items-baseline gap-4 border-b border-line py-5 text-3xl font-medium tracking-tight text-fog transition-colors hover:text-flux-300 sm:text-4xl"
+          style={`--i:${i}`}
+          data-menu-item
+        >
+          <span class="font-mono text-xs text-mute">{String(i + 1).padStart(2, '0')}</span>
+          <span>{link.label}</span>
+          <span
+            class="ml-auto translate-x-[-6px] text-flux-400 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          >
+            →
+          </span>
+        </a>
+      ))
+    }
+    <p class="mt-8 font-mono text-xs tracking-widest text-mute uppercase">
+      {t.contact.location}
+    </p>
+    <a href={`mailto:contato@fluxghg.com`} class="text-lg text-flux-300 hover:underline">
+      contato@fluxghg.com
+    </a>
+  </nav>
+</div>
+
+<style>
+  [data-mobile-menu][data-open] {
+    display: flex;
+  }
+  [data-mobile-menu][data-open] [data-menu-item] {
+    animation: menu-in 0.55s var(--ease-out-expo) both;
+    animation-delay: calc(var(--i) * 55ms + 60ms);
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-mobile-menu][data-open] [data-menu-item] {
+      animation: none;
+    }
+  }
+</style>
